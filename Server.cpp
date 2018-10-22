@@ -3,20 +3,30 @@
 
 /////private methods defention////////
 Message *Server::getRequest(){
-	int nRead;
-	Message buf[SIZE],*p=buf;
-	nRead = 0;
+	char *marshalled_base64;
+	int maxBytes;
+	if(udpServerSocket.readFromSocketWithBlock(marshalled_base64,maxBytes)>0){
+		Message request_msg(&marshalled_base64);
+		if(request_msg.getMessageType==0)
+		{
 
-	if(amount)
+			cout<<"SERVER RECIEVED A REQUEST";
+		}
+		else
+		{
+			cout<<"ERROR : SERVER RECIEVED A REPLY";
+		}
+
+	}
+
 
 }
+/*
 Message *Server::doOperation(){
 
 }
+*/
 void Server::sendReply (Message * _message){
-
-	this->message_type = Reply;
-	_message.setMessageType(this->message_type);
 
 
 }
@@ -32,8 +42,10 @@ Server::Server(char * _listen_hostname, int _listen_port){
 
 	if(udpServerSocket->initializeServer(_listen_hostname,_listen_port)){
 
-		cout<<"SERVER SOCKET IS CREATED"<<endl;
+		cout<<"A SERVER IS INiTILIZED"<<endl;
 		udpServerSocket.enable();
+
+		sendReply(getRequest());
 	}
 	else
 	{

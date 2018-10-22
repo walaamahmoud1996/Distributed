@@ -1,6 +1,6 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
-enum MessageType { Request, Reply};//needs to be updated
+enum MessageType { Request, Reply,Auth,StatusReply,ImageListReply};//needs to be updated
 class Message
 {
 private:
@@ -10,14 +10,7 @@ private:
 	size_t message_size;
 	int rpc_id;
 
-	struct Request_Reply_Message{
-		MessageType messageType;
-		int requestId;
-		RemoteRef remoteRefrence;
-		int opertaionId;
-		byte[] arguments;
-
-	};
+	
 public:
 	Message(int operation, void * p_message, size_t p_message_size,int p_rpc_id);
 	Message(char * marshalled_base64);

@@ -11,7 +11,13 @@ private:
 	int recv_port;
 	int send_port;
 
+	
 
+	void CommunicationModule();
+	/*
+		*sends the marshaled message created by the stub
+		*recieves a reply from server and unmarshal it 
+	*/
 	Message * doOperation(int operationID);
 	/*
 		client side function uses time out

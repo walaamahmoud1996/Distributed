@@ -10,6 +10,9 @@ private:
 	UDPServerSocket * udpServerSocket;
 	Message * getRequest();//unmarshall
 	void sendReply (Message * _message);//marshall
+	
+
+
 	public:
 	Server(char * _listen_hostname, int _listen_port);
 	

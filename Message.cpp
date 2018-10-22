@@ -3,11 +3,25 @@
 
 
 
-Message::Message(int operation, void * p_message, size_t p_message_size,int p_rpc_id){}
+Message::Message(int operation,MessageType type, void * p_message, size_t p_message_size,int p_rpc_id){
+	
+	this->operation = operation;
+	this->message_type = type;
+	this->message = p_message;
+	this->message_size = p_message_size;
+	this->rpc_id = p_rpc_id;
+
+}
 
 
 
-Message::Message(char * marshalled_base64){}
+
+Message::Message(char * marshalled_base64){
+	/*
+		unmarshal message
+
+	*/
+}
 char *Message::marshal (){}
 int Message::getOperation (){
 
