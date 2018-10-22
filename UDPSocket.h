@@ -19,10 +19,13 @@ protected:
 	int peerPort;
 	bool enabled;
 	pthread_mutex_t mutex;
-	void Create_Socket();
+	
 	void Close_Socket();
 	void makeLocalSA();
-	void makeDestSA();
+	void makeDestSA(char * hostname);
+	void makeReceiverSA();
+	int startUp();
+	int acceptConnection();
 
 
 
@@ -32,13 +35,13 @@ public:
 	char * getFilterAddress ();
 	bool initializeServer (char * _myAddr, int _myPort);
 	bool initializeClient (char * _peerAddr, int _peerPort);
-	int writeToSocket (char * buffer, int maxBytes );
-	int writeToSocketAndWait (char * buffer, int maxBytes,int microSec );
-	int readFromSocketWithNoBlock (char * buffer, int maxBytes );
+	int writeToSocket (char * buffer, int maxBytes );//for a reply
+	int writeToSocketAndWait (char * buffer, int maxBytes,int microSec );//for a request
+	int readFromSocketWithNoBlock (char * buffer, int maxBytes );//recieve from a client// server side function
 	int readFromSocketWithTimeout (char * buffer, int maxBytes, int timeoutSec,
 	int timeoutMilli);
 	int readFromSocketWithBlock (char * buffer, int maxBytes );
-	int readSocketWithNoBlock (char * buffer, int maxBytes );
+	int readSocketWithNoBlock (char * buffer, int maxBytes );//read from a server // aclinet side function
 	int readSocketWithTimeout (char * buffer, int maxBytes, int timeoutSec, int
 	timeoutMilli);
 	int readSocketWithBlock (char * buffer, int maxBytes );

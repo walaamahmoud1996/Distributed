@@ -36,6 +36,7 @@ void Message::setOperation (int _operation){
 void Meassage::setMessage (void * message, size_t message_size){
 
 	this->message = message;
+	this->message_size = message_size;
 }
 void Message::setMessageType (MessageType message_type){
 
