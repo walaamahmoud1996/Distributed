@@ -4,8 +4,7 @@
 
 Client::Client(char * _hostname, int _port)
 {
-	this->hostname = _hostname;
-	this->send_port = _port;
+	
 
 	if(udpSocket->intializeClient(_hostname,_port)){
 
@@ -21,12 +20,16 @@ Client::Client(char * _hostname, int _port)
 /////// send a message and returns a reply //////////
 Message *Client:: execute(Message * _message){
 
+	int maxBytes = _message.getMessageSize();
+	char* buffer = (char*)_message.getMessage();
+	udpSocket->writeToSocketAndWait(buffer,maxBytes);
+
+
 
 		
 
 
 
-		if( (n = sendto(s, message, strlen(message), 0,udpSocket->get,sizeof(struct sockaddr_in))) < 0) perror("Send 2 failed\n");
-
+		
 }
 Client::~Client();

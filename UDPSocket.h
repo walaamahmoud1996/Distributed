@@ -1,10 +1,18 @@
 #ifndef UDPSOCKET_H
 #define UDPSOCKET_H
 
+#include<string>
+#include<cstring>
+#include <iostream>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <netdb.h>
+#include<stdio.h>
 #include <netinet/in.h>
-
+#include<stdlib.h>
+#include<unistd.h>
+#include <arpa/inet.h>
+#define SIZE 200
 
 
 class UDPSocket
@@ -21,12 +29,14 @@ protected:
 	pthread_mutex_t mutex;
 	
 	void Close_Socket();
-	void makeLocalSA();
+	
 	void makeDestSA(char * hostname);
-	void makeReceiverSA();
+	
 	int startUp();
 	int acceptConnection();
-
+	void makeReceiverSA(struct sockaddr_in *sa, int port);
+	void makeLocalSA(struct sockaddr_in *sa);
+	void makeDestSA(struct sockaddr_in * sa, char *hostname, int port);
 
 
 public:
@@ -35,15 +45,15 @@ public:
 	char * getFilterAddress ();
 	bool initializeServer (char * _myAddr, int _myPort);
 	bool initializeClient (char * _peerAddr, int _peerPort);
-	int writeToSocket (char * buffer, int maxBytes );//for a reply
-	int writeToSocketAndWait (char * buffer, int maxBytes,int microSec );//for a request
-	int readFromSocketWithNoBlock (char * buffer, int maxBytes );//recieve from a client// server side function
+	int writeToSocket (char * buffer, int maxBytes );//for a reply a server side function
+	int writeToSocketAndWait (char * buffer, int maxBytes,int Sec,int microSec );//for a request a client side function
+	int readFromSocketWithNoBlock (char * buffer, int maxBytes );//recieve from a client// server side function //nonblocking recieve
 	int readFromSocketWithTimeout (char * buffer, int maxBytes, int timeoutSec,
-	int timeoutMilli);
-	int readFromSocketWithBlock (char * buffer, int maxBytes );
+	int timeoutMicro);// a server side function 
+	//int readFromSocketWithBlock (char * buffer, int maxBytes );//a client side function
 	int readSocketWithNoBlock (char * buffer, int maxBytes );//read from a server // aclinet side function
 	int readSocketWithTimeout (char * buffer, int maxBytes, int timeoutSec, int
-	timeoutMilli);
+	timeoutMicro);
 	int readSocketWithBlock (char * buffer, int maxBytes );
 	int getMyPort ();
 	int getPeerPort ();
@@ -55,5 +65,5 @@ public:
 	int getSocketHandler();
 	~UDPSocket ( );
 };
-#include "UDPSocket.cpp"
+
 #endif // UDPSOCKET_H		
