@@ -11,19 +11,19 @@ private:
 	int recv_port;
 	int send_port;
 
-	
 
-	void CommunicationModule();
+
+	//void CommunicationModule();
 	/*
 		*sends the marshaled message created by the stub
-		*recieves a reply from server and unmarshal it 
+		*recieves a reply from server and unmarshal it
 	*/
-	Message * doOperation(int operationID);
+	//Message * doOperation(int operationID);
 	/*
 		client side function uses time out
 	parameters
 		*remote reference IP address + a port number
-		*operation ID 
+		*operation ID
 		*arguments array of bytes
 	issues a send function - sends a request
 	issues a recieve to get the reply uses a time out if there were no reply
@@ -32,7 +32,7 @@ private:
 		*
 	request_messag would be of this structure
 
-		Message Type 
+		Message Type
 		requestID //should be unique for the client
 		remoteRefenece
 		operationID
@@ -40,7 +40,7 @@ private:
 
 	*/
 
-	
+
 public:
 	Client(char * _hostname, int _port);
 	Message * execute(Message * _message);

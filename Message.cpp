@@ -39,11 +39,7 @@ string Message::marshal (){
 	serialized+= (to_string(rpc_id) + ' ');
 	serialized+= (to_string(operation) + ' ');
 	serialized+= (to_string(message_size) + ' ');
-	string data = "";
-	for (int i = 0; i < message_size; i++){
-		data+=message[i];
-	}
-	serialized+= data;
+	serialized+= message;
 	return serialized;
 }
 

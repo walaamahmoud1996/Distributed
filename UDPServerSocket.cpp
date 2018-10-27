@@ -6,9 +6,9 @@ UDPServerSocket::UDPServerSocket()
 	perror("socket failed");
 	return;
 }
-bool UDPServerSocket::initializeServer (char * _myAddr, int _myPort){
+/*bool UDPServerSocket::initializeServer (char * _myAddr, int _myPort){
 
-}
+}*/
 UDPServerSocket::~UDPServerSocket ( ){
-	
+
 }

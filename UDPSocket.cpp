@@ -1,7 +1,7 @@
  #include "UDPSocket.h"
 using namespace std;
 UDPSocket::UDPSocket (){
-	
+
 }
 
 void UDPSocket::setFilterAddress (char * _filterAddress){
@@ -68,7 +68,7 @@ sa->sin_port = htons(port);
 int UDPSocket::writeToSocket (char * buffer, int maxBytes ){
 	/*this is for sending a reply from server*/
 	int bytesnum;
-	
+
 	makeDestSA(&peerAddr,this->peerAddress,this->peerPort);
 
 
@@ -101,7 +101,7 @@ int UDPSocket::writeToSocketAndWait (char * buffer, int maxBytes,int Sec,int mic
 
 }
 int UDPSocket::readFromSocketWithNoBlock (char * buffer, int maxBytes ){
-	
+
 	//same design as blocking but with thread for each client
 
 }
@@ -132,11 +132,11 @@ int UDPSocket::readFromSocketWithTimeout (char * buffer, int maxBytes, int timeo
 		return bytesnum;
 
 }
-/*
-int UDPSocket::readFromSocketWithBlock (char * buffer, int maxBytes ){
+
+int UDPSocket::readSocketWithBlock (char * buffer, int maxBytes ){
 	int bytesnum,aLenght;
 	aLenght = sizeof(this->peerAddr);
-	this->peerAddr.sinfamily = AF_INET;
+	this->peerAddr.sin_family = AF_INET;
 	if(bytesnum=recvfrom(this->sock,buffer,SIZE,0,(struct sockaddr *)&peerAddr,&aLenght)<0){
 		perror("ERROR :SERVER CANNOT RECIEVE");
 		return bytesnum;
@@ -148,9 +148,9 @@ int UDPSocket::readFromSocketWithBlock (char * buffer, int maxBytes ){
 			return 0;
 		}
 	else
-		return bytesnum;	
+		return bytesnum;
 
-}*/
+}
 int UDPSocket::readSocketWithNoBlock (char * buffer, int maxBytes ){
 
 }
@@ -174,13 +174,13 @@ int UDPSocket::readSocketWithTimeout (char * buffer, int maxBytes, int timeoutSe
 		perror("ERROR :SERVER CANNOT RECIEVE");
 		return bytesnum;
 	}
-	
+
 	/*else
 	{
 		/*struct sockaddr_in* pV4Addr = (struct sockaddr_in*)&aSocketAddress;
         struct in_addr ipAddr = pV4Addr->sin_addr;
         char str[INET_ADDRSTRLEN];
-        inet_ntop( AF_INET, &ipAddr, this->peerAddress, INET_ADDRSTRLEN );	
+        inet_ntop( AF_INET, &ipAddr, this->peerAddress, INET_ADDRSTRLEN );
 		return bytesnum;
 	}*/
 
@@ -207,7 +207,7 @@ bool UDPSocket::isEnabled(){
 }
 void UDPSocket::lock(){
 
-//for threading 
+//for threading
 	}
 void UDPSocket::unlock(){
 	//for threading

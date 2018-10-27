@@ -1,6 +1,7 @@
 #include "Directory.h"
-
 using namespace std;
+
+/*
 Directory::Directory(){
 
 }
@@ -8,17 +9,17 @@ Directory::Directory(){
 bool Direcotory::SignUp(char*UserName,char* PassWord){
 
 
-  	it_DB = DataBase.find(UserName);
+  it_DB = DataBase.find(UserName);
 	if(it_DB != DataBase.end())
 	{
-		cout<<"USERNAME ALREADY IN USE\n";
+		cout << "USERNAME ALREADY IN USE\n";
 		return false;
 	}
 	else
 	{
-		DataBase[UserName]= PassWord;
-		cout<<"WELCOME TO SERVICE\n";
-
+		DataBase[UserName] = PassWord;
+		cout << "WELCOME TO SERVICE\n";
+    fout << UserName << " : " << DataBase[Username] << endl;
 		return true;
 	}
 
@@ -31,7 +32,7 @@ vector<Image> Login(char* UserName,char* PassWord){
 	if(it_UI != UserImage.end())
 	{
 		cout<<"USERNAME ALREADY IN USE\n";
-		return map[UserName];
+		return UserImage[UserName];
 	}
 	else
 	{
@@ -48,3 +49,4 @@ vector<Image> Login(char* UserName,char* PassWord){
 ~Directory::Directory(){
 
 }
+*/
