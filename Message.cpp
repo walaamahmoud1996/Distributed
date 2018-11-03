@@ -1,16 +1,13 @@
 #include "Message.h"
-#include <iostream>
-#include <string>
-#include <cstring>
 
 
 
-Message::Message(int operation,MessageType type, string p_message, size_t p_message_size,int p_rpc_id){
-	this->message_type = type;
-	this->rpc_id = p_rpc_id;
-	this->operation = operation;
-	this->message_size = p_message_size;
-	this->message = p_message;
+Message::Message(int p_operation,MessageType type, string p_message, size_t p_message_size,int p_rpc_id){
+	message_type = type;
+	rpc_id = p_rpc_id;
+	operation = p_operation;
+	message_size = p_message_size;
+	message = p_message;
 }
 
 
@@ -24,13 +21,17 @@ Message::Message(string serialized){
 		ss >> t;
 		operation = stoi(t);
 		ss >> t;
+
+
 		message_size = stoi(t);
+
 		message = "";
 		char temp;
 		for (int i = -1; i<message_size; i++){
 			ss.get(temp);
 			if(i != -1) message+=temp;
 		}
+		
 }
 
 string Message::marshal (){
@@ -69,7 +70,7 @@ void Message::setOperation (int _operation){
 
 	this->operation = _operation;
 }
-void Meassage::setMessage (string message, size_t message_size){
+void Message::setMessage (string message, size_t message_size){
 
 	this->message = message;
 	this->message_size = message_size;
@@ -78,4 +79,4 @@ void Message::setMessageType (MessageType message_type){
 
 	this->message_type = message_type;
 }
-Message::~Message();
+Message::~Message(){}

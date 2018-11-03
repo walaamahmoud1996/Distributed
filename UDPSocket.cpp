@@ -17,7 +17,6 @@ sa->sin_port = htons(port);
 sa-> sin_addr.s_addr = htonl(INADDR_ANY);
 }
 bool UDPSocket::initializeServer (char * _myAddr, int _myPort){
-
 	this->myAddress = _myAddr;
 	this->myPort = _myPort;
 
@@ -134,9 +133,10 @@ int UDPSocket::readFromSocketWithTimeout (char * buffer, int maxBytes, int timeo
 }
 
 int UDPSocket::readSocketWithBlock (char * buffer, int maxBytes ){
-	int bytesnum,aLenght;
-	aLenght = sizeof(this->peerAddr);
+	int bytesnum;
+	socklen_t aLenght = sizeof(this->peerAddr);
 	this->peerAddr.sin_family = AF_INET;
+	cout << "wallahi h2ra";
 	if(bytesnum=recvfrom(this->sock,buffer,SIZE,0,(struct sockaddr *)&peerAddr,&aLenght)<0){
 		perror("ERROR :SERVER CANNOT RECIEVE");
 		return bytesnum;

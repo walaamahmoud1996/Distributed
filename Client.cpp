@@ -1,14 +1,12 @@
 #include "Client.h"
 
-
-
 Client::Client(char * _hostname, int _port)
 {
 
 
-	if(udpSocket->intializeClient(_hostname,_port)){
+	if(udpSocket.initializeClient(_hostname,_port)){
 		cout <<"Client in intialized\n";
-		UDPClientSocket.enable();
+		udpSocket.enable();
 	}
 	else
 		cout<<"Failed To intialize a Client\n";
@@ -20,9 +18,10 @@ Client::Client(char * _hostname, int _port)
 /////// send a message and returns a reply //////////
 Message* Client::execute(Message * _message){
 
-	int maxBytes = _message.getMessageSize();
-	char* buffer = (char*)_message.getMessage();
-	udpSocket->writeToSocketAndWait(buffer,maxBytes,3,0);
+	int maxBytes = _message->getMessageSize();
+	string str = (_message->getMessage());
+	char* buffer = strcpy((char*)malloc(str.length()+1),str.c_str());
+	udpSocket.writeToSocketAndWait(buffer,maxBytes,3,0);
 
 }
-Client::~Client();
+Client::~Client(){}

@@ -1,12 +1,15 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-enum MessageType={Request,Reply};
+#include "UDPClientSocket.h"
+#include "Message.h"
+
+//enum MessageType {Request,Reply};
 
 class Client
 {
 private:
-	UDPClientSocket * udpSocket;
+	UDPClientSocket udpSocket;
 	char * hostname;
 	int recv_port;
 	int send_port;
@@ -46,5 +49,5 @@ public:
 	Message * execute(Message * _message);
 	~Client();
 };
-#include "Client.cpp"
+//#include "Client.cpp"
 #endif // CLIENT_H

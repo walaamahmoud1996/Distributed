@@ -1,17 +1,17 @@
 #include "Server.h"
-#include"Message.h"
-#include<cstring>
-#include <thread>
 using namespace std;
 
 /////private methods defention////////
-Message *Server::getRequest(){
-	char *marshalled_base64;
+Message Server::getRequest(){
+	char * marshalled_base64;
 	int maxBytes = 200; //to be changed
+	cout << "ana h2ra aho \n";
 	if(udpServerSocket.readSocketWithBlock(marshalled_base64,maxBytes)>0){
-		Message request_msg(&marshalled_base64);
-
-		if(request_msg.getMessageType()==0)
+		//cout << marshalled_base64 << endl;
+		cout << "read and filling the message\n";
+		Message request_msg(string(marshalled_base64));
+		cout << string(marshalled_base64)<<endl;
+		/*if(request_msg.getMessageType() == MessageType::Request)
 		{
 
 			cout<<"SERVER RECIEVED A REQUEST";
@@ -21,21 +21,22 @@ Message *Server::getRequest(){
 		{
 			cout<<"ERROR : SERVER RECIEVED A REPLY";
 		}
-
+*/
 	}
 
 
 }
 
-Message *Server::doOperation(){
-	Message ms(1,string, "hi", 2,1)
+Message Server::doOperation(){
+	Message ms(1, Reply, "hi", 2,1);
 	return ms;
 }
 
-void Server::sendReply (Message * _message){
-		char* marshalleed_base64 =  message.marshal();
+void Server::sendReply (Message  _message){
+		string str = _message.marshal();
+		char* marshalleed_base64 =  strcpy((char*)malloc(str.length()+1),str.c_str());
 		int maxBytes = strlen(marshalleed_base64);
-		UDPServerSocket.writeToSocket(marshalleed_base64, maxBytes);
+		udpServerSocket.writeToSocket(marshalleed_base64, maxBytes);
 }
 
 
@@ -47,7 +48,7 @@ void Server::sendReply (Message * _message){
 Server::Server(char * _listen_hostname, int _listen_port){
 
 
-	if(udpServerSocket->initializeServer(_listen_hostname,_listen_port)){
+	if(udpServerSocket.initializeServer(_listen_hostname,_listen_port)){
 
 		cout<<"A SERVER IS INiTILIZED"<<endl;
 		udpServerSocket.enable();
@@ -65,20 +66,20 @@ Server::Server(char * _listen_hostname, int _listen_port){
 
 //should be blocking
 void Server::serveRequest(){
-	if(udpServerSocket.isEnable())
+	if(udpServerSocket.isEnabled())
 	{
 		//listen(udpServerSocket.getSocketHandler(),5);
 
 
-		Message*mp = getRequest();
+		Message mp = getRequest();
 
 
 
-
-		if(mp->getMessageType()==0)//0 for request 1 for reply
+cout << "I git it \n";
+		if(mp.getMessageType()==MessageType::Request)//0 for request 1 for reply
 		{
 			mp = doOperation();
-			if(!mp->getMessageType())//0 for request
+			if(mp.getMessageType()==MessageType::Request)//0 for request
 			{
 				sendReply(mp);
 			}

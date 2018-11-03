@@ -6,6 +6,7 @@ UDPClientSocket::UDPClientSocket ()
   perror("socket failed");
   return;
 }
+}
 /*bool UDPClientSocket::initializeClient (char * _peerAddr, int _peerPort){
   //perhaps add a new client thread
   CSocket.initializeClient ( _peerAddr, _peerPort);

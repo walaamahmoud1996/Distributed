@@ -1,5 +1,13 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
+#include <string>
+#include <cstring>
+
+#include <iostream>
+#include <sstream>
+
+
+using namespace std;
 enum MessageType {Request, Reply};
 class Message
 {
@@ -12,8 +20,8 @@ private:
 
 
 public:
-	Message(int operation, string p_message, size_t p_message_size,int p_rpc_id);
-	Message(char * marshalled_base64);
+	Message(int p_operation,MessageType type, string p_message, size_t p_message_size,int p_rpc_id);
+	Message(string marshalled_base64);
 	string marshal ();
 	int getOperation ();
 	int getRPCId();
@@ -23,13 +31,13 @@ public:
 	void setOperation (int _operation);
 	void setMessage (string message, size_t message_size);
 	void setMessageType (MessageType message_type);
-
+	~Message();
 	/*
 
 		RPC messages
 
 	*/
-	~Message();
+
 };
-#include "Message.cpp"
+//#include "Message.cpp"
 #endif // MESSAGE_H
