@@ -8,7 +8,7 @@ void UDPSocket::setFilterAddress (char * _filterAddress){
 
 }
 char * UDPSocket::getFilterAddress (){
-  
+
 }
 void UDPSocket::makeReceiverSA(struct sockaddr_in *sa, int port)
 {
@@ -59,17 +59,17 @@ void UDPSocket::makeDestSA(struct sockaddr_in * sa, char *hostname, int port)
 struct hostent *host;
 sa->sin_family = AF_INET;
 if((host = gethostbyname(hostname))== NULL){
-printf("Unknown host name\n");
-exit(-1);
+  printf("Unknown host name\n");
+  exit(-1);
 }
-sa-> sin_addr = *(struct in_addr *) (host->h_addr);
-sa->sin_port = htons(port);
+  sa-> sin_addr = *(struct in_addr *) (host->h_addr);
+  sa->sin_port = htons(port);
 }
 int UDPSocket::writeToSocket (char * buffer, int maxBytes ){
 	/*this is for sending a reply from server*/
 	int bytesnum;
 
-	makeDestSA(&peerAddr,this->peerAddress,this->peerPort);
+	//makeDestSA(&peerAddr,this->peerAddress,this->peerPort);
 
 
 	if((bytesnum = sendto(this->sock,buffer,sizeof(buffer),0,(struct sockaddr *)&peerAddr,sizeof(struct sockaddr_in)))<0)
@@ -133,7 +133,7 @@ int UDPSocket::readFromSocketWithTimeout (char * buffer, int maxBytes, int timeo
 
 }
 
-int UDPSocket::readSocketWithBlock (char * buffer, int maxBytes ){
+int UDPSocket::readSocketWithBlock (string buffer, int maxBytes ){
 	int bytesnum;
 
 	socklen_t aLenght = sizeof(this->peerAddr);
@@ -143,18 +143,20 @@ int UDPSocket::readSocketWithBlock (char * buffer, int maxBytes ){
 	if((bytesnum=recvfrom(sock,message1,SIZE,0,(struct sockaddr *)&peerAddr,&aLenght)<0)){
     printf("you don't listen\n");
 		perror("ERROR :SERVER CANNOT RECIEVE");
-    buffer = &message1[SIZE];
     return bytesnum;
 	}
-	else
-		if(bytesnum>maxBytes)
+	else if(bytesnum>maxBytes)
 		{
 			perror("ERROR :SERVER SOCKET OVERFLOW");
 			return 0;
 		}
 	else
+  {
+    cout << message1[0]<<endl;
+    buffer = message1;
+    cout << buffer <<endl;
 		return bytesnum;
-
+  }
 }
 int UDPSocket::readSocketWithNoBlock (char * buffer, int maxBytes ){
 

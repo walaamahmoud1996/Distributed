@@ -3,13 +3,13 @@ using namespace std;
 
 /////private methods defention////////
 Message Server::getRequest(){
-	char * marshalled_base64;
+	string marshalled_base64;
 	int maxBytes = 200; //to be changed
 	cout << "ana h2ra aho \n";
 	if(udpServerSocket.readSocketWithBlock(marshalled_base64,maxBytes)>0){
 		cout << marshalled_base64 << endl;
-		std::string x (marshalled_base64);
-		Message request_msg(x);
+		//std::string x (marshalled_base64);
+		Message request_msg(marshalled_base64);
 
 		if(request_msg.getMessageType() == MessageType::Request)
 		{
@@ -29,10 +29,10 @@ Message Server::getRequest(){
 
 Message Server::doOperation(){
 	printf("is it assignment problem?");
-	Message y(0, Request, "a7eh", 4, 0);
-	//Message Z(0, MessageType::Reply, "hi", 3, 0);
+	//Message y(0, Reply, "a7eh", 4, 0);
+	Message Z(0, MessageType::Reply, "hi", 3, 0);
 	printf("3mlt w rag3");
-	return y;
+	return Z;
 }
 
 void Server::sendReply (Message  _message){
@@ -78,15 +78,18 @@ void Server::serveRequest(){
 
 
 
-cout << "I git it \n";
+		cout << "I git it \n";
 		if(mp.getMessageType()==MessageType::Request)//0 for request 1 for reply
 		{
 			printf("h3ml 7aga\n");
-			Message np = doOperation();
+			Message np(0, MessageType::Reply, "hi", 2, 0);
 			if(np.getMessageType()==MessageType::Reply)
 			{
-				printf("hb3t reply");
+				printf("hb3t reply\n");
 				sendReply(np);
+			}
+			else{
+				printf("it wasn't a reply\n");
 			}
 		}
 	}
