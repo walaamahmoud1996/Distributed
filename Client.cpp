@@ -16,10 +16,10 @@ Client::Client(char * _hostname, int _port)
 }
 
 /////// send a message and returns a reply //////////
-Message* Client::execute(Message * _message){
+Message* Client::execute(Message _message){
 
-	int maxBytes = _message->getMessageSize();
-	string str = (_message->getMessage());
+	int maxBytes = _message.getMessageSize();
+	string str = (_message.getMessage());
 	char* buffer = strcpy((char*)malloc(str.length()+1),str.c_str());
 	udpSocket.writeToSocketAndWait(buffer,maxBytes,3,0);
 

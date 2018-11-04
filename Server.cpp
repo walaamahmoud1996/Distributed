@@ -7,11 +7,11 @@ Message Server::getRequest(){
 	int maxBytes = 200; //to be changed
 	cout << "ana h2ra aho \n";
 	if(udpServerSocket.readSocketWithBlock(marshalled_base64,maxBytes)>0){
-		//cout << marshalled_base64 << endl;
-		cout << "read and filling the message\n";
-		Message request_msg(string(marshalled_base64));
-		cout << string(marshalled_base64)<<endl;
-		/*if(request_msg.getMessageType() == MessageType::Request)
+		cout << marshalled_base64 << endl;
+		std::string x (marshalled_base64);
+		Message request_msg(x);
+
+		if(request_msg.getMessageType() == MessageType::Request)
 		{
 
 			cout<<"SERVER RECIEVED A REQUEST";
@@ -21,15 +21,18 @@ Message Server::getRequest(){
 		{
 			cout<<"ERROR : SERVER RECIEVED A REPLY";
 		}
-*/
+
 	}
 
 
 }
 
 Message Server::doOperation(){
-	Message ms(1, Reply, "hi", 2,1);
-	return ms;
+	printf("is it assignment problem?");
+	Message y(0, Request, "a7eh", 4, 0);
+	//Message Z(0, MessageType::Reply, "hi", 3, 0);
+	printf("3mlt w rag3");
+	return y;
 }
 
 void Server::sendReply (Message  _message){
@@ -78,10 +81,12 @@ void Server::serveRequest(){
 cout << "I git it \n";
 		if(mp.getMessageType()==MessageType::Request)//0 for request 1 for reply
 		{
-			mp = doOperation();
-			if(mp.getMessageType()==MessageType::Request)//0 for request
+			printf("h3ml 7aga\n");
+			Message np = doOperation();
+			if(np.getMessageType()==MessageType::Reply)
 			{
-				sendReply(mp);
+				printf("hb3t reply");
+				sendReply(np);
 			}
 		}
 	}

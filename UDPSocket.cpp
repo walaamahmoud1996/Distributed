@@ -8,7 +8,7 @@ void UDPSocket::setFilterAddress (char * _filterAddress){
 
 }
 char * UDPSocket::getFilterAddress (){
-
+  
 }
 void UDPSocket::makeReceiverSA(struct sockaddr_in *sa, int port)
 {
@@ -38,6 +38,7 @@ sa->sin_family = AF_INET;
 sa->sin_port = htons(0);
 sa-> sin_addr.s_addr = htonl(INADDR_ANY);
 }
+
 bool UDPSocket::initializeClient (char * _peerAddr, int _peerPort){
 	 this->peerAddress = _peerAddr;
 	 this->peerPort = _peerPort;
@@ -102,7 +103,7 @@ int UDPSocket::writeToSocketAndWait (char * buffer, int maxBytes,int Sec,int mic
 int UDPSocket::readFromSocketWithNoBlock (char * buffer, int maxBytes ){
 
 	//same design as blocking but with thread for each client
-
+return 1;
 }
 int UDPSocket::readFromSocketWithTimeout (char * buffer, int maxBytes, int timeoutSec,int timeoutMicro)//this is a client side method
 {
@@ -117,7 +118,7 @@ int UDPSocket::readFromSocketWithTimeout (char * buffer, int maxBytes, int timeo
      	return -1;
       }
     else
-	if(bytesnum=recvfrom(this->sock,buffer,SIZE,0,(struct sockaddr *)&peerAddr,&aLenght)<0){
+	if((bytesnum=recvfrom(this->sock,buffer,SIZE,0,(struct sockaddr *)&peerAddr,&aLenght)<0)){
 		perror("ERROR :SERVER CANNOT RECIEVE");
 		return bytesnum;
 	}
@@ -134,12 +135,16 @@ int UDPSocket::readFromSocketWithTimeout (char * buffer, int maxBytes, int timeo
 
 int UDPSocket::readSocketWithBlock (char * buffer, int maxBytes ){
 	int bytesnum;
+
 	socklen_t aLenght = sizeof(this->peerAddr);
-	this->peerAddr.sin_family = AF_INET;
-	cout << "wallahi h2ra";
-	if(bytesnum=recvfrom(this->sock,buffer,SIZE,0,(struct sockaddr *)&peerAddr,&aLenght)<0){
+	peerAddr.sin_family = AF_INET;
+	printf("wallahi h2ra\n");
+  char message1[SIZE];
+	if((bytesnum=recvfrom(sock,message1,SIZE,0,(struct sockaddr *)&peerAddr,&aLenght)<0)){
+    printf("you don't listen\n");
 		perror("ERROR :SERVER CANNOT RECIEVE");
-		return bytesnum;
+    buffer = &message1[SIZE];
+    return bytesnum;
 	}
 	else
 		if(bytesnum>maxBytes)
