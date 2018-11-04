@@ -31,7 +31,7 @@ Message::Message(string serialized){
 			ss.get(temp);
 			if(i != -1) message+=temp;
 		}
-		
+
 }
 
 string Message::marshal (){

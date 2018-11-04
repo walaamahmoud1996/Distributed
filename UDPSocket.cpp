@@ -71,15 +71,15 @@ int UDPSocket::writeToSocket (char * buffer, int maxBytes ){
 
 	//makeDestSA(&peerAddr,this->peerAddress,this->peerPort);
 
-
-	if((bytesnum = sendto(this->sock,buffer,sizeof(buffer),0,(struct sockaddr *)&peerAddr,sizeof(struct sockaddr_in)))<0)
+  cout << "hb3t 5alas a5er kalam\n";
+	if((bytesnum = sendto(this->sock,buffer,strlen(buffer),0,(struct sockaddr *)&peerAddr,sizeof(struct sockaddr_in)))<0)
 		{
 			perror("ERROR : CANNOT SEND A REPLY TO CLIENT");
 		}
 
 	return bytesnum;
-
 }
+
 int UDPSocket::writeToSocketAndWait (char * buffer, int maxBytes,int Sec,int microSec ){
 
 	/*this is for sending a request from a client waiting for a reply from a server*/
@@ -87,16 +87,19 @@ int UDPSocket::writeToSocketAndWait (char * buffer, int maxBytes,int Sec,int mic
 	struct hostent *host;
 	makeDestSA(&peerAddr,this->peerAddress,this->peerPort);
 
-  cout << buffer <<endl;
-	if((bytesnum = sendto(this->sock,buffer,sizeof(buffer),0,(struct sockaddr *)&peerAddr,sizeof(struct sockaddr_in)))<0)
+  //cout << buffer <<endl;
+  //cout << strlen(buffer) <<endl;
+
+	if((bytesnum = sendto(this->sock,buffer,strlen(buffer),0,(struct sockaddr *)&peerAddr,sizeof(struct sockaddr_in)))<0)
 		{
 			perror("ERROR : CANNOT SEND A REPLY TO CLIENT");
 		}
+    cout << buffer <<endl;
 
 	//return bytesnum;
 
-
-	return readFromSocketWithTimeout(buffer,maxBytes,Sec,microSec);
+  string message;
+	return readFromSocketWithTimeout(message,maxBytes,Sec,microSec);
 
 
 }
@@ -105,9 +108,12 @@ int UDPSocket::readFromSocketWithNoBlock (char * buffer, int maxBytes ){
 	//same design as blocking but with thread for each client
 return 1;
 }
-int UDPSocket::readFromSocketWithTimeout (char * buffer, int maxBytes, int timeoutSec,int timeoutMicro)//this is a client side method
+int UDPSocket::readFromSocketWithTimeout (string& buffer, int maxBytes, int timeoutSec,int timeoutMicro)//this is a client side method
 {
 	int bytesnum;
+  char message1[SIZE];
+  memset(message1,0 ,sizeof(message1));
+
 	socklen_t aLenght = sizeof(this->peerAddr);
 	peerAddr.sin_family = AF_INET;
 	struct timeval tv;
@@ -117,7 +123,7 @@ int UDPSocket::readFromSocketWithTimeout (char * buffer, int maxBytes, int timeo
       perror("Error");
      	return -1;
   }
-  else if((bytesnum=recvfrom(this->sock,buffer,SIZE,0,(struct sockaddr *)&peerAddr,&aLenght)<0)){
+  else if((bytesnum=recvfrom(this->sock,message1,SIZE,0,(struct sockaddr *)&peerAddr,&aLenght)<0)){
 		perror("ERROR :SERVER CANNOT RECIEVE");
 		return bytesnum;
 	}
@@ -128,8 +134,11 @@ int UDPSocket::readFromSocketWithTimeout (char * buffer, int maxBytes, int timeo
 			return 0;
 		}
 	else
+  {
+    buffer = message1;
+    cout << buffer << endl;
 		return bytesnum;
-
+  }
 }
 
 int UDPSocket::readSocketWithBlock (string& buffer, int maxBytes ){

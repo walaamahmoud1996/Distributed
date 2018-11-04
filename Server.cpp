@@ -39,6 +39,7 @@ void Server::sendReply (Message  _message){
 		string str = _message.marshal();
 		char* marshalleed_base64 =  strcpy((char*)malloc(str.length()+1),str.c_str());
 		int maxBytes = strlen(marshalleed_base64);
+		cout << "hb3t de: " << marshalleed_base64 << endl;
 		udpServerSocket.writeToSocket(marshalleed_base64, maxBytes);
 }
 
@@ -82,7 +83,7 @@ void Server::serveRequest(){
 		if(mp.getMessageType()==MessageType::Request)//0 for request 1 for reply
 		{
 			printf("h3ml 7aga\n");
-			Message np(0, MessageType::Reply, "hi", 2, 0);
+			Message np = doOperation();
 			if(np.getMessageType()==MessageType::Reply)
 			{
 				printf("hb3t reply\n");
