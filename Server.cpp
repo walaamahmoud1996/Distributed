@@ -6,11 +6,11 @@ Message Server::getRequest(){
 	string marshalled_base64;
 	int maxBytes = 200; //to be changed
 	cout << "ana h2ra aho \n";
-	if(udpServerSocket.readSocketWithBlock(marshalled_base64,maxBytes)>0){
+	if(udpServerSocket.readSocketWithBlock(marshalled_base64,maxBytes)>=0){
 		cout << marshalled_base64 << endl;
 		//std::string x (marshalled_base64);
 		Message request_msg(marshalled_base64);
-
+		cout << request_msg.getMessage() << endl;
 		if(request_msg.getMessageType() == MessageType::Request)
 		{
 

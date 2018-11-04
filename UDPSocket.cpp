@@ -87,7 +87,7 @@ int UDPSocket::writeToSocketAndWait (char * buffer, int maxBytes,int Sec,int mic
 	struct hostent *host;
 	makeDestSA(&peerAddr,this->peerAddress,this->peerPort);
 
-
+  cout << buffer <<endl;
 	if((bytesnum = sendto(this->sock,buffer,sizeof(buffer),0,(struct sockaddr *)&peerAddr,sizeof(struct sockaddr_in)))<0)
 		{
 			perror("ERROR : CANNOT SEND A REPLY TO CLIENT");
@@ -111,14 +111,13 @@ int UDPSocket::readFromSocketWithTimeout (char * buffer, int maxBytes, int timeo
 	socklen_t aLenght = sizeof(this->peerAddr);
 	peerAddr.sin_family = AF_INET;
 	struct timeval tv;
-      tv.tv_usec = timeoutMicro;
-      tv.tv_sec = timeoutSec;
-      if (setsockopt(this->sock, SOL_SOCKET, SO_RCVTIMEO,&tv,sizeof(tv)) < 0) {
-        perror("Error");
+  tv.tv_usec = timeoutMicro;
+  tv.tv_sec = timeoutSec;
+  if (setsockopt(this->sock, SOL_SOCKET, SO_RCVTIMEO,&tv,sizeof(tv)) < 0) {
+      perror("Error");
      	return -1;
-      }
-    else
-	if((bytesnum=recvfrom(this->sock,buffer,SIZE,0,(struct sockaddr *)&peerAddr,&aLenght)<0)){
+  }
+  else if((bytesnum=recvfrom(this->sock,buffer,SIZE,0,(struct sockaddr *)&peerAddr,&aLenght)<0)){
 		perror("ERROR :SERVER CANNOT RECIEVE");
 		return bytesnum;
 	}
@@ -133,13 +132,14 @@ int UDPSocket::readFromSocketWithTimeout (char * buffer, int maxBytes, int timeo
 
 }
 
-int UDPSocket::readSocketWithBlock (string buffer, int maxBytes ){
+int UDPSocket::readSocketWithBlock (string& buffer, int maxBytes ){
 	int bytesnum;
 
 	socklen_t aLenght = sizeof(this->peerAddr);
 	peerAddr.sin_family = AF_INET;
 	printf("wallahi h2ra\n");
   char message1[SIZE];
+  memset(message1,0 ,sizeof(message1));
 	if((bytesnum=recvfrom(sock,message1,SIZE,0,(struct sockaddr *)&peerAddr,&aLenght)<0)){
     printf("you don't listen\n");
 		perror("ERROR :SERVER CANNOT RECIEVE");
@@ -152,9 +152,11 @@ int UDPSocket::readSocketWithBlock (string buffer, int maxBytes ){
 		}
 	else
   {
-    cout << message1[0]<<endl;
+    for(int i =0; i< SIZE; i++)
+      cout << message1[i];
     buffer = message1;
     cout << buffer <<endl;
+    cout << bytesnum << endl;
 		return bytesnum;
   }
 }

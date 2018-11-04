@@ -54,7 +54,7 @@ public:
 	int readSocketWithNoBlock (char * buffer, int maxBytes );//read from a server // aclinet side function
 	int readSocketWithTimeout (char * buffer, int maxBytes, int timeoutSec, int
 	timeoutMicro);
-	int readSocketWithBlock (string buffer, int maxBytes );
+	int readSocketWithBlock (string& buffer, int maxBytes );
 	int getMyPort ();
 	int getPeerPort ();
 	void enable();

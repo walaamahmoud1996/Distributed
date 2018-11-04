@@ -19,8 +19,10 @@ Client::Client(char * _hostname, int _port)
 Message* Client::execute(Message _message){
 
 	int maxBytes = _message.getMessageSize();
-	string str = (_message.getMessage());
+	string str = (_message.marshal());
+	cout << str << endl;
 	char* buffer = strcpy((char*)malloc(str.length()+1),str.c_str());
+	cout << buffer << endl;
 	udpSocket.writeToSocketAndWait(buffer,maxBytes,3,0);
 
 }
