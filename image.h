@@ -18,6 +18,7 @@ private:
   string fileName;
   string imageData;
   string owner;
+  string hiddenImage;
   map <string, int> userViews;
 
   void hideImage();
@@ -29,7 +30,7 @@ public:
   int getNumberOfViews(string username);
   void setNumberOfViews(string username, int views);
 
-
+  string printImage();
   // User Side Functions
 
   string viewImage(string username);

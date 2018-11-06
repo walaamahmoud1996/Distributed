@@ -23,6 +23,7 @@ image::image(string def, string inputFile, string username){
 
 void image::hideImage(){
   //stegnography code here
+  hiddenImage = imageData;
 }
 
 int image::getNumberOfViews(string username){
@@ -31,6 +32,11 @@ int image::getNumberOfViews(string username){
 
 void image::setNumberOfViews(string username, int views){
     userViews[username] = views;
+}
+
+string image::printImage()
+{
+    return hiddenImage;
 }
 
 string image::viewImage(string username){
