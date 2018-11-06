@@ -2,12 +2,14 @@
 
 
 
-Message::Message(int p_operation,MessageType type, vector<string> p_message, size_t p_message_size,int p_rpc_id){
+Message::Message(int p_operation,MessageType type, vector<string> p_message, int p_rpc_id){
 	message_type = type;
 	rpc_id = p_rpc_id;
 	operation = p_operation;
-	message_size = p_message_size;
+	message_size = 0;
 	message = p_message;
+	for(int i = 0; i < message.size(); i++)
+		message_size += message[i].size();
 }
 
 
@@ -54,7 +56,7 @@ string Message::marshal (){
 	serialized+= (to_string(operation) + ' ');
 	serialized+= (to_string(message_size) + ' ');
 	for (int i = 0; i < message.size(); i++)
-		serialized+= (message[i] + ',');
+		serialized+= (message[i] + ' ');
 	return serialized;
 }
 

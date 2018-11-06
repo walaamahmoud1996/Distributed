@@ -37,9 +37,11 @@ string image::viewImage(string username){
   ofstream fout("output.jpg", ios::binary);
   if (userViews[username] <= 0) {
     fout << defaultImage;
+    //cout << defaultImage;
   }
   else{
     fout << imageData;
+    //cout << imageData;
     userViews[username]--;
   }
   return "output.jpg";

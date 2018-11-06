@@ -21,7 +21,7 @@ private:
 
 
 public:
-	Message(int p_operation,MessageType type, vector<string> p_message, size_t p_message_size,int p_rpc_id);
+	Message(int p_operation,MessageType type, vector<string> p_message,int p_rpc_id);
 	Message(string marshalled_base64);
 	string marshal ();
 	int getOperation ();

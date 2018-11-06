@@ -17,7 +17,7 @@ int main(){
   x.push_back("hello world");
   x.push_back("hello");
 
-  Message y(1, Request, x, x[0].size()+x[1].size(), 0);
+  Message y(1, Request, x, 0);
 
   string f = y.marshal();
   cout << f << endl;
@@ -27,11 +27,11 @@ int main(){
 
 
 
-  //image hello ("def.jpg", "hi.jpg", "amr");
-  //cout << hello.getNumberOfViews("ahmed");
-  //cout << hello.getNumberOfViews("mirco");
+  image hello ("index.jpg", "index.jpg", "amr");
+  cout << hello.getNumberOfViews("ahmed")<<endl;
+  cout << hello.getNumberOfViews("mirco")<<endl;
 
-  //hello.viewImage("mirco");
+  cout<< hello.viewImage("ahmed");
 
   return 0;
 
