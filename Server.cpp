@@ -10,7 +10,7 @@ Message Server::getRequest(){
 		cout << marshalled_base64 << endl;
 		//std::string x (marshalled_base64);
 		Message request_msg(marshalled_base64);
-		cout << request_msg.getMessage() << endl;
+		//cout << request_msg.getMessage() << endl;
 		if(request_msg.getMessageType() == MessageType::Request)
 		{
 
@@ -27,10 +27,14 @@ Message Server::getRequest(){
 
 }
 
-Message Server::doOperation(){
+Message Server::doOperation(int opID, vector<string> args){
 	printf("is it assignment problem?");
+	image x ("def.jpg", args[0], "amr");
+	string res = x.viewImage(args[1]);
+	vector<string> rep;
+	rep.push_back(res);
 	//Message y(0, Reply, "a7eh", 4, 0);
-	Message Z(0, MessageType::Reply, "hi", 3, 0);
+	Message Z(0, MessageType::Reply, rep, 3, 0);
 	printf("3mlt w rag3");
 	return Z;
 }
@@ -83,7 +87,9 @@ void Server::serveRequest(){
 		if(mp.getMessageType()==MessageType::Request)//0 for request 1 for reply
 		{
 			printf("h3ml 7aga\n");
-			Message np = doOperation();
+			int opID = mp.getOperation();
+			vector<string> args = mp.getMessage();
+			Message np = doOperation(opID, args);
 			if(np.getMessageType()==MessageType::Reply)
 			{
 				printf("hb3t reply\n");

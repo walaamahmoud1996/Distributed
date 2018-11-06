@@ -5,6 +5,7 @@
 #include <string>
 #include<cstring>
 #include <thread>
+#include "image.h"
 
 class Server
 {
@@ -14,7 +15,7 @@ private:
 	UDPServerSocket udpServerSocket;
 	Message  getRequest();//unmarshall
 	void sendReply (Message _message);//marshall
-	Message doOperation();
+	Message doOperation(int opID, vector<string> args);
 
 
 

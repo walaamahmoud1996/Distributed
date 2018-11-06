@@ -2,7 +2,7 @@
 
 
 
-Message::Message(int p_operation,MessageType type, string p_message, size_t p_message_size,int p_rpc_id){
+Message::Message(int p_operation,MessageType type, vector<string> p_message, size_t p_message_size,int p_rpc_id){
 	message_type = type;
 	rpc_id = p_rpc_id;
 	operation = p_operation;
@@ -25,13 +25,26 @@ Message::Message(string serialized){
 
 		message_size = stoi(t);
 
-		message = "";
+		char temp;
+		ss.get(temp);
+		string h = "";
+		while(ss.get(temp)){
+			//ss.get(temp);
+			if (temp == ',') {
+				message.push_back(h);
+				h = "";
+			}
+			else h+=temp;
+		}
+
+/*
+		string message = "";
 		char temp;
 		for (int i = -1; i<message_size; i++){
 			ss.get(temp);
 			if(i != -1) message+=temp;
 		}
-
+*/
 }
 
 string Message::marshal (){
@@ -40,7 +53,8 @@ string Message::marshal (){
 	serialized+= (to_string(rpc_id) + ' ');
 	serialized+= (to_string(operation) + ' ');
 	serialized+= (to_string(message_size) + ' ');
-	serialized+= message;
+	for (int i = 0; i < message.size(); i++)
+		serialized+= (message[i] + ',');
 	return serialized;
 }
 
@@ -54,7 +68,7 @@ int Message::getRPCId(){
 	return rpc_id;
 }
 
-string Message::getMessage(){
+vector<string> Message::getMessage(){
 
 	return message;
 }
@@ -70,7 +84,7 @@ void Message::setOperation (int _operation){
 
 	this->operation = _operation;
 }
-void Message::setMessage (string message, size_t message_size){
+void Message::setMessage (vector<string> message, size_t message_size){
 
 	this->message = message;
 	this->message_size = message_size;

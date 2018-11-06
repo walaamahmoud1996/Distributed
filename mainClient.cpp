@@ -13,7 +13,13 @@ int main(){
 	char* ip =strcpy((char*)malloc(str.length()+1),str.c_str());
 
 	Client x(ip, 1234);
-	Message y(0, Request, "a7eh", 4, 0);
+
+	//operation 1: view Image
+	vector<string> args;
+	args.push_back("hi.jpg");
+	args.push_back("ahmed");
+
+	Message y(1, Request, args, args[0].size()+args[1].size(), 0);
 
 	x.execute(y);
 
