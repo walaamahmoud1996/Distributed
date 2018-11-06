@@ -56,7 +56,7 @@ string Message::marshal (){
 	serialized+= (to_string(operation) + ' ');
 	serialized+= (to_string(message_size) + ' ');
 	for (int i = 0; i < message.size(); i++)
-		serialized+= (message[i] + ' ');
+		serialized+= (message[i] + ',');
 	return serialized;
 }
 
