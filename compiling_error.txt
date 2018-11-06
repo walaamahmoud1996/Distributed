@@ -1,0 +1,28 @@
+clang: warning: treating 'c-header' input as 'c++-header' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+/home/amrgouhar/Downloads/DisProj/Distributed/UDPClientSocket.h:4:32: error: expected class name
+class UDPClientSocket : public UDPSocket
+                               ^
+In file included from /home/amrgouhar/Downloads/DisProj/Distributed/UDPClientSocket.h:12:
+/home/amrgouhar/Downloads/DisProj/Distributed/UDPClientSocket.cpp:5:7: error: use of undeclared identifier 'sock'
+  if((sock = socket(AF_INET, SOCK_DGRAM, 0))<0) {
+      ^
+/home/amrgouhar/Downloads/DisProj/Distributed/UDPClientSocket.cpp:5:21: error: use of undeclared identifier 'AF_INET'
+  if((sock = socket(AF_INET, SOCK_DGRAM, 0))<0) {
+                    ^
+/home/amrgouhar/Downloads/DisProj/Distributed/UDPClientSocket.cpp:5:30: error: use of undeclared identifier 'SOCK_DGRAM'
+  if((sock = socket(AF_INET, SOCK_DGRAM, 0))<0) {
+                             ^
+/home/amrgouhar/Downloads/DisProj/Distributed/UDPClientSocket.cpp:6:3: error: use of undeclared identifier 'perror'
+  perror("socket failed");
+  ^
+/home/amrgouhar/Downloads/DisProj/Distributed/UDPClientSocket.cpp:13:38: error: expected ';' after expression
+UDPClientSocket::~UDPClientSocket ( ){
+                                     ^
+                                     ;
+/home/amrgouhar/Downloads/DisProj/Distributed/UDPClientSocket.h:13:28: error: expected '}'
+#endif // UDPCLIENTSOCKET_H
+                           ^
+/home/amrgouhar/Downloads/DisProj/Distributed/UDPClientSocket.cpp:4:1: note: to match this '{'
+{
+^
+7 errors generated.

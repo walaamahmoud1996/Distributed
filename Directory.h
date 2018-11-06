@@ -3,20 +3,24 @@
 
 #include <map>
 #include <vector>
-#include <Magick++.h>
-using namespace Magick;
+#include <fstream>
+//#include <Magick++.h>
+//using namespace Magick;
+using namespace std;
 
 class Directory
 {
 
 private:
+	ifstream fin;
+	ofstream fout;
 	Server D_Server;
 	struct image{
 		Image img;
 		int imageAddr;
 	};
 	map<char*,char*> DataBase;
-	map<char*,vector<Image>> User_Image;
+	map<char*,vector<image>> User_Image;
 	map<char*,char*>::iterator it_DB;
 
 	map<char*,vector<image>>::iterator it_UI;

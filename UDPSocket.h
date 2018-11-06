@@ -13,7 +13,7 @@
 #include<unistd.h>
 #include <arpa/inet.h>
 #define SIZE 200
-
+using namespace	std;
 
 class UDPSocket
 {
@@ -27,11 +27,11 @@ protected:
 	int peerPort;
 	bool enabled;
 	pthread_mutex_t mutex;
-	
+
 	void Close_Socket();
-	
+
 	void makeDestSA(char * hostname);
-	
+
 	int startUp();
 	int acceptConnection();
 	void makeReceiverSA(struct sockaddr_in *sa, int port);
@@ -48,13 +48,13 @@ public:
 	int writeToSocket (char * buffer, int maxBytes );//for a reply a server side function
 	int writeToSocketAndWait (char * buffer, int maxBytes,int Sec,int microSec );//for a request a client side function
 	int readFromSocketWithNoBlock (char * buffer, int maxBytes );//recieve from a client// server side function //nonblocking recieve
-	int readFromSocketWithTimeout (char * buffer, int maxBytes, int timeoutSec,
-	int timeoutMicro);// a server side function 
+	int readFromSocketWithTimeout (string& buffer, int maxBytes, int timeoutSec,
+	int timeoutMicro);// a server side function
 	//int readFromSocketWithBlock (char * buffer, int maxBytes );//a client side function
 	int readSocketWithNoBlock (char * buffer, int maxBytes );//read from a server // aclinet side function
 	int readSocketWithTimeout (char * buffer, int maxBytes, int timeoutSec, int
 	timeoutMicro);
-	int readSocketWithBlock (char * buffer, int maxBytes );
+	int readSocketWithBlock (string& buffer, int maxBytes );
 	int getMyPort ();
 	int getPeerPort ();
 	void enable();
@@ -66,4 +66,4 @@ public:
 	~UDPSocket ( );
 };
 
-#endif // UDPSOCKET_H		
+#endif // UDPSOCKET_H
