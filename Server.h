@@ -1,11 +1,13 @@
 #ifndef SERVER_H
 #define SERVER_H
-#include "UDPServerSocket.h"
-#include "Message.h"
+
+
 #include <string>
 #include<cstring>
 #include <thread>
-#include "image.h"
+#include "UDPServerSocket.h"
+#include "Message.h"
+#include "Image.h"
 
 class Server
 {

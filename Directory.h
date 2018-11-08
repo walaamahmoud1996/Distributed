@@ -4,10 +4,12 @@
 #include <map>
 #include <vector>
 #include <fstream>
+#include "Image.h"
+#include <string>
 //#include <Magick++.h>
 //using namespace Magick;
 using namespace std;
-
+enum operations={login,take_owner_images,send_images,register_requests};
 class Directory
 {
 
@@ -16,22 +18,26 @@ private:
 	ofstream fout;
 	Server D_Server;
 	struct image{
-		Image img;
-		int imageAddr;
+		string img;
+		string owner_name;
+		string image_id;
 	};
-	map<char*,char*> DataBase;
-	map<char*,vector<image>> User_Image;
-	map<char*,char*>::iterator it_DB;
 
-	map<char*,vector<image>>::iterator it_UI;
+	map<string,string> DataBase;
+	map<string,vector<image>> User_Image;
+	map<string,string>::iterator it_DB;
+
+	map<string,vector<image>>::iterator it_UI;
 
 public:
 
 
 	Directory();
-	bool SignUp(char* UserName,char* PassWord);
+	bool SignUp(string UserName,string PassWord);
 
-	vector<Image> Login(char*UserName,char* PassWord);
+	bool Login(string UserName,string PassWord);
+
+	void Take_Owner_Images(vector<string>);
 
 
 	~Directory();

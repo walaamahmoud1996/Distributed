@@ -1,18 +1,28 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
+
+
 #include "UDPClientSocket.h"
+#include "UDPSocket.h"
+
 #include "Message.h"
+#include "Image.h"
 
-//enum MessageType {Request,Reply};
+//enum  MessageType {Request,Reply};
+enum operations{login,Take_my_recources,};
 
+using namespace std;
 class Client
 {
 private:
+	//UDPClientSocket udpSocket;
 	UDPClientSocket udpSocket;
 	char * hostname;
 	int recv_port;
 	int send_port;
+	int rpc_id;
+
 
 
 
@@ -47,7 +57,11 @@ private:
 public:
 	Client(char * _hostname, int _port);
 	Message * execute(Message  _message);
+	Client();
+	void Upload_Image(string image_name);
+	void Take_my_recources(string);
+	void Login(string,string);
+
 	~Client();
 };
-//#include "Client.cpp"
 #endif // CLIENT_H
