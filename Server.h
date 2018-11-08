@@ -3,21 +3,31 @@
 #include "UDPServerSocket.h"
 #include "Message.h"
 #include <string>
-#include<cstring>
+#include <cstring>
 #include <thread>
+#include <map>
+#include <utility>
+#include<algorithm>
 #include "image.h"
 
 class Server
 {
 private:
 
-
+	map<pair<pair<string, int>, int>, vector<string>> Log;
+	int reqID;
+	map<int,pair<string, int>> reqHist;
 	UDPServerSocket udpServerSocket;
+	bool matchPackets(string);
 	Message  getRequest();//unmarshall
 	void sendReply (Message _message);//marshall
-	Message doOperation(int opID, vector<string> args);
+	Message doOperation(Message requested);
 
 
+
+	int UnShrinkInt(string tmp);
+
+	int getPacketNumber(string message, bool& end);
 
 	public:
 	Server(char * _listen_hostname, int _listen_port);

@@ -34,23 +34,36 @@ int main()
 {
 
 
-/*  int x = 133899057;
-  string tmp = ShrinkInt(x);
-  int y = UnShrinkInt(tmp);
-  cout << x << " " << tmp <<" " << y;
-*/
-/*
-string a = "abcd";
-string b = a.substr(0,3);
-string c = a.substr(3,3);
-cout << a <<" " << b << " " << c <<endl;
+//   int x = 133899057;
+//   string tmp = ShrinkInt(x);
+//   int y = UnShrinkInt(tmp);
+//   cout << x << " " << tmp <<" " << y;
+//
+//
+// string a = "abcd";
+// string b = a.substr(0,3);
+// string c = a.substr(3,3);
+// cout << a <<" " << b << " " << c <<endl;
+//
+// cout << a.size() <<" " << b.size() << " " << c.size() <<endl;
+//
+//
+//
+// int x = 0b1;
+// cout << (x << 8) << endl;
 
-cout << a.size() <<" " << b.size() << " " << c.size() <<endl;
+int cnt = 0;
+for(int i =0;i < 15; i++)
+{
+	cout << i << endl;
+	if(i == 5)
+	{
+		i = 4;
+		cnt++;
+	}
+	if(cnt == 3) break;
+}
 
-*/
-
-int x = 0b1;
-cout << (x << 8) << endl;
 
   return 0;
 

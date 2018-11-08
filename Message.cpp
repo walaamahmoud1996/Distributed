@@ -149,6 +149,11 @@ int Message::getRPCId(){
 	return rpc_id;
 }
 
+int Message::getArgNum()
+{
+	return arg_num;
+}
+
 vector<string> Message::getMessage(){
 
 	return message;
@@ -174,4 +179,16 @@ void Message::setMessageType (MessageType message_type){
 
 	this->message_type = message_type;
 }
+
+
+pair<string, int> Message::getPeerData()
+{
+	return peerData;
+}
+
+void Message::setPeerData(pair<string, int> _peerData)
+{
+	peerData = _peerData;
+}
+
 Message::~Message(){}

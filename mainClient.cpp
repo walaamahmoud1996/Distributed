@@ -19,7 +19,7 @@ int main(){
 	args.push_back("hi.jpg");
 	args.push_back("ahmed");
 
-	Message y(1, Request, args, args[0].size()+args[1].size(), 0);
+	Message y(1, Request, args, 0);
 
 	x.execute(y);
 

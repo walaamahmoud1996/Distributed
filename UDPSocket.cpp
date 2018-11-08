@@ -3,13 +3,13 @@ using namespace std;
 UDPSocket::UDPSocket (){
 
 }
-
-void UDPSocket::setFilterAddress (char * _filterAddress){
-
-}
-char * UDPSocket::getFilterAddress (){
-
-}
+//
+// void UDPSocket::setFilterAddress (char * _filterAddress){
+//
+// }
+// char * UDPSocket::getFilterAddress (){
+//
+// }
 void UDPSocket::makeReceiverSA(struct sockaddr_in *sa, int port)
 {
 sa->sin_family = AF_INET;
@@ -80,11 +80,11 @@ int UDPSocket::writeToSocket (char * buffer, int maxBytes ){
 	return bytesnum;
 }
 
-int UDPSocket::writeToSocketAndWait (char * buffer, int maxBytes,int Sec,int microSec ){
+int UDPSocket::writeToSocketAndWait (char * buffer, int maxBytes,int Sec,int microSec, string& rMessage){
 
 	/*this is for sending a request from a client waiting for a reply from a server*/
 	int bytesnum;
-	struct hostent *host;
+	//struct hostent *host;
 	makeDestSA(&peerAddr,this->peerAddress,this->peerPort);
 
   //cout << buffer <<endl;
@@ -97,14 +97,13 @@ int UDPSocket::writeToSocketAndWait (char * buffer, int maxBytes,int Sec,int mic
     cout << buffer <<endl;
 
 	//return bytesnum;
-
-  string message;
-	return readFromSocketWithTimeout(message,maxBytes,Sec,microSec);
-
+  if(Sec || microSec)
+	  return readFromSocketWithTimeout(rMessage,maxBytes,Sec,microSec);
+  else
+    return -1;
 
 }
 int UDPSocket::readFromSocketWithNoBlock (char * buffer, int maxBytes ){
-
 	//same design as blocking but with thread for each client
 return 1;
 }
@@ -141,6 +140,21 @@ int UDPSocket::readFromSocketWithTimeout (string& buffer, int maxBytes, int time
   }
 }
 
+
+void UDPSocket::getPeerAddr(string& hostname, int&port)
+{
+
+  char str[INET_ADDRSTRLEN];
+  inet_ntop(AF_INET, &(peerAddr.sin_addr), str, INET_ADDRSTRLEN);
+  hostname = str;
+  port = peerAddr.sin_port;
+}
+void UDPSocket::setPeerAddr(string hostname, int port)
+{
+  char* tmp = strcpy((char*)malloc(hostname.length()+1),hostname.c_str());
+  makeDestSA(&peerAddr, tmp,  port);
+}
+
 int UDPSocket::readSocketWithBlock (string& buffer, int maxBytes ){
 	int bytesnum;
 
@@ -170,7 +184,7 @@ int UDPSocket::readSocketWithBlock (string& buffer, int maxBytes ){
   }
 }
 int UDPSocket::readSocketWithNoBlock (char * buffer, int maxBytes ){
-
+return -1;
 }
 int UDPSocket::readSocketWithTimeout (char * buffer, int maxBytes, int timeoutSec, int
 	timeoutMicro)
@@ -195,14 +209,14 @@ int UDPSocket::readSocketWithTimeout (char * buffer, int maxBytes, int timeoutSe
 
 	/*else
 	{
-		/*struct sockaddr_in* pV4Addr = (struct sockaddr_in*)&aSocketAddress;
+		struct sockaddr_in* pV4Addr = (struct sockaddr_in*)&aSocketAddress;
         struct in_addr ipAddr = pV4Addr->sin_addr;
         char str[INET_ADDRSTRLEN];
         inet_ntop( AF_INET, &ipAddr, this->peerAddress, INET_ADDRSTRLEN );
 		return bytesnum;
 	}*/
 
-
+return bytesnum;
 
 }
 //int UDPSocket::readSocketWithBlock (char * buffer, int maxBytes );

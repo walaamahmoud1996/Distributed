@@ -42,11 +42,14 @@ private:
 		arquments
 
 	*/
+	int UnShrinkInt(string tmp);
+
+	int getPacketNumber(string message, bool& end);
 
 
 public:
 	Client(char * _hostname, int _port);
-	Message * execute(Message  _message);
+	Message  execute(Message  _message);
 	~Client();
 };
 //#include "Client.cpp"

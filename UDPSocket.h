@@ -12,12 +12,13 @@
 #include<stdlib.h>
 #include<unistd.h>
 #include <arpa/inet.h>
+
 #define SIZE 8000
 using namespace	std;
 
 class UDPSocket
 {
-protected:
+private:
 	int sock;
 	struct sockaddr_in myAddr,peerAddr;
 	//sockaddr_in peerAddr;
@@ -41,13 +42,16 @@ protected:
 
 public:
 	UDPSocket ();
-	void setFilterAddress (char * _filterAddress);
-	char * getFilterAddress ();
+	// void setFilterAddress (char * _filterAddress);
+	// char * getFilterAddress ();
+	void getPeerAddr(string& hostname, int& port);
+	void setPeerAddr(string hostname, int port);
+
 	bool initializeServer (char * _myAddr, int _myPort);
 	bool initializeClient (char * _peerAddr, int _peerPort);
 	int writeToSocket (char * buffer, int maxBytes );//for a reply a server side function
-	int writeToSocketAndWait (char * buffer, int maxBytes,int Sec,int microSec );//for a request a client side function
-	int readFromSocketWithNoBlock (char * buffer, int maxBytes );//recieve from a client// server side function //nonblocking recieve
+	int writeToSocketAndWait (char * buffer, int maxBytes, int Sec ,int microSec, string& rMessage );//for a request a client side function
+	int readFromSocketWithNoBlock (char * buffer, int maxBytes);//recieve from a client// server side function //nonblocking recieve
 	int readFromSocketWithTimeout (string& buffer, int maxBytes, int timeoutSec,
 	int timeoutMicro);// a server side function
 	//int readFromSocketWithBlock (char * buffer, int maxBytes );//a client side function

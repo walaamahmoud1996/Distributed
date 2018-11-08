@@ -2,7 +2,7 @@
 #define MESSAGE_H
 #include <string>
 #include <cstring>
-
+#include<utility>
 #include <iostream>
 #include <sstream>
 #include <vector>
@@ -21,6 +21,8 @@ private:
 	size_t message_size;
 	int rpc_id;
 	int arg_num;
+	pair<string, int> peerData;
+
 
 public:
 	Message(int p_operation,MessageType type, vector<string> p_message,int p_rpc_id);
@@ -28,11 +30,14 @@ public:
 	vector<string> marshal ();
 	int getOperation ();
 	int getRPCId();
+	int getArgNum();
 	string ShrinkInt(int x);
 	int UnShrinkInt(string tmp);
 	vector<string> getMessage();
+	pair<string, int> getPeerData();
 	size_t getMessageSize();
 	MessageType getMessageType();
+	void setPeerData(pair<string, int>);
 	void setOperation (int _operation);
 	void setMessage (vector<string> message, size_t message_size);
 	void setMessageType (MessageType message_type);
