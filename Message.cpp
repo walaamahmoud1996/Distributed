@@ -9,54 +9,133 @@ Message::Message(int p_operation,MessageType type, vector<string> p_message, int
 	message_size = 0;
 	message = p_message;
 	for(int i = 0; i < message.size(); i++)
-		message_size += message[i].size();
+		message_size += message[i].size()+1;
+	arg_num = message.size();
+	message_size -= 1;
 }
 
 
-Message::Message(string serialized){
-		stringstream ss (serialized);
-		string t;
-		ss >> t;
-		message_type = MessageType(stoi(t));
-		ss >> t;
-		rpc_id = stoi(t);
-		ss >> t;
-		operation = stoi(t);
-		ss >> t;
+Message::Message(vector<string> serialized){
+	arg_num = -1;		//if arg_num = -1; then this is a phantom message;
+	message_size = 0;
+	MessageType message_type;
+	operation = -1;
+	rpc_id = -1;
+	string messageSent = "";
+	for(int i = 0; i < serialized.size();i++)
+	{
+		int tmpx;
+		tmpx = UnShrinkInt(serialized[i].substr(0,4));
+		if(i== 0)
+			rpc_id = tmpx;
+		else if(rpc_id != tmpx)
+		{
+			arg_num = -1;
+			break;
+		}
 
-
-		message_size = stoi(t);
-
-		char temp;
-		ss.get(temp);
-		string h = "";
-		while(ss.get(temp)){
-			//ss.get(temp);
-			if (temp == ',') {
-				message.push_back(h);
-				h = "";
+		tmpx = UnShrinkInt(serialized[i].substr(4,4));
+		if(i ==0)
+			{
+				operation = tmpx & 0x7fffffff;
+				message_type = MessageType(tmpx >> 31);
 			}
-			else h+=temp;
+		else if((operation != (tmpx & 0x7fffffff))||(message_type != MessageType(tmpx >> 31)))
+		{
+			arg_num = -1;
+			break;
 		}
+		tmpx = UnShrinkInt(serialized[i].substr(8,4));
+		if(i == 0)
+		{
+			message_size += (tmpx &0x00ffffff);
+			arg_num = (tmpx >> 24) &0xff;
+		}
+		else if(arg_num != ((tmpx >> 24) &0xff))
+		{
+			arg_num = -1;
+			break;
+		}
+		messageSent += serialized[i].substr(12,SIZE-16);
 
-/*
-		string message = "";
-		char temp;
-		for (int i = -1; i<message_size; i++){
-			ss.get(temp);
-			if(i != -1) message+=temp;
+
+	}
+
+		int To = 0;
+		for(int i =0; i < arg_num-1; i++)
+		{
+			size_t found = messageSent.find(' ');
+			string t = messageSent.substr(To,found);
+
+			To += (found+1);
+			message.push_back(t);
 		}
-*/
+		string t = messageSent.substr(To,messageSent.size());
+		message.push_back(t);
 }
 
-string Message::marshal (){
-	string serialized = "";
-	serialized+= (to_string(int(message_type)) + ' ');
-	serialized+= (to_string(rpc_id) + ' ');
-	serialized+= (to_string(operation) + ' ');
-	serialized+= (to_string(message_size) + ' ');
-	for (int i = 0; i < message.size(); i++)
-		serialized+= (message[i] + ',');
+
+string Message::ShrinkInt(int x)
+{
+	string returned = "";
+	for(int i =0; i < 4; i++)
+	{
+		char z = x & 0xff;
+    cout << z<< endl;
+		returned.push_back(z);
+		x = x>>8;
+	}
+	return returned;
+}
+
+int Message::UnShrinkInt(string tmp)
+{
+  int x = 0;
+  for(int i =0; i < 4;i++)
+  {
+    int tmpx = tmp[i] &0xff;
+    x |= (tmpx<<(i*8));
+  }
+  return x;
+
+}
+
+vector <string> Message::marshal (){
+	string messageSent = "";
+	for(int i=0; i < message.size();i++)
+	{
+		if(i != message.size()-1)
+			messageSent += message[i] + ' ';
+		else
+			messageSent += message[i];
+	}
+
+	vector<string> serialized;
+	int end = ceil(message_size/float(SIZE-16));
+
+
+	for(int i = 0; i < end;i++)
+	{
+		string tmp = "";
+		tmp += ShrinkInt(rpc_id);
+
+
+		operation &= 0x7fffffff;
+		tmp+= ShrinkInt((int(message_type)<<31) | operation);
+
+		if(i!=end-1)
+			tmp+= ShrinkInt( (arg_num<<24) | SIZE-16);		//remove this in the near future
+		else
+			tmp+= ShrinkInt((arg_num<<24) | message_size%(SIZE-16));
+
+
+		tmp += ShrinkInt(((i!=(end-1))<<31)|(i&0x7fffffff));
+
+
+		tmp += messageSent.substr(i*(SIZE-16),SIZE-16);
+
+		serialized.push_back(tmp);
+	}
 	return serialized;
 }
 

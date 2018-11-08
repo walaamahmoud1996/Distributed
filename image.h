@@ -8,28 +8,8 @@
 #include <sstream>
 #include <map>
 #include <cstring>
-#include <iostream>
-#include <unistd.h>
-#include <sys/types.h>
-#include <errno.h>
-#include <stdio.h>
-#include <sys/wait.h>
-#include <stdlib.h>
 
-#include <string>
-
-/*
-#include <opencv/cv.h>
-#include <opencv/highgui.h>
-#include <opencv2/opencv.hpp>
-#include "opencv2/core.hpp"
-
-/*
-#include <cv.h>
-#include <highgui.h>
-*/
 using namespace std;
-//using namespace cv;
 
 class image{
 private:
@@ -38,30 +18,22 @@ private:
   string fileName;
   string imageData;
   string owner;
-  string user_image;
-  string imageID;
-  map <pair<string,string>, int> userViews;
-    map <pair<string,string>, int>::iterator it;
-
+  string hiddenImage;
+  map <string, int> userViews;
 
   void hideImage();
-  void encode(string,string);
-  void decode();
-  bool isBitSet(char ch, int pos);
-
 
 public:
-  image(string image_path, string user_qouta_path);
-  image(string encoded_image);
+  image(string def, string inputFile, string username);
 
   // Owner Side Functions
-  int getNumberOfViews(string username,string imageID);
-  void setNumberOfViews(string username,string imageID, int views);
+  int getNumberOfViews(string username);
+  void setNumberOfViews(string username, int views);
 
-
+  string printImage();
   // User Side Functions
 
-  string viewImage(string username,string imageID);
+  string viewImage(string username);
 
 
 };
