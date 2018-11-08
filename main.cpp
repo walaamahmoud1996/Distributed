@@ -1,23 +1,11 @@
-#include <iostream>
-#include <stddef.h>
+#include "mainwindow.h"
+#include <QApplication>
 
-#include "UDPSocket.h"
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);
+    MainWindow w;
+    w.show();
 
-
-
-
-
-
-
-
-
-
-
-//#include "UDPClientSocket.h"
-using namespace std;
-
-int main(){
-
-	
-	return 0;
+    return a.exec();
 }
