@@ -7,25 +7,28 @@ Image::Image(string image_name,string text_name){
 
 }
 //viewer side constructor
-Image::Image(string owner,string image_id,string cover_as_string){
+Image::Image(string image_name,string image_as_string,int decode_level){
 
-	convert_to_jpeg(owner,cover_as_string);
+	if(decode_level == 0)
+	{convert_to_jpeg("cover"+image_name,image_as_string);
 	//convert_to_jpeg("cover.jpeg",cover_as_string);
 
-	decode("cover"+owner+image_id+".jpeg");
+	decode("cover"+image_name);
 
-	string image_as_string = convert_to_string(owner+image_id+".txt");
+	}
+	else
+	{
+		
+		decode(image_name);
 
-	convert_to_jpeg(owner+image_id+".jpeg",image_as_string);
-	decode(owner+image_id+"jpeg");
-	
+	}
 
 }
+/*
 Image::Image(string image_as_string){
 	convert_to_jpeg(image_as_string);
-	decode("owner.jpeg");
 	
-}
+}*/
 void Image::encode(string image_name,string text_name){
 
 	string line = "steghide embed -ef ";

@@ -15,11 +15,10 @@
 
 using namespace std;
 int main(){
-	Client c;
-	string s= "walaa";
-	c.Upload_Image(s);
-	
+	char* ip = copyStr("127.0.0.1");
+	Client c(ip,3000);
 
+	c.Take_my_recources("index.jpeg");
 
 	return 0;
 }

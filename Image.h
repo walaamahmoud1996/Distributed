@@ -38,9 +38,9 @@ private:
 
 public:
     Image(string image_name,string text_name);//owener side function
-    Image(string image_as_string);//directory side function
-    Image(string owener,string Image_id,string cover_as_string);//viewer side function
-
+    //Image(string image_as_string);//directory side function
+    //Image(string owener,string Image_id,string cover_as_string);//viewer side function
+    Image(string,string,int);
     string Get_Actual_Image();
     string Get_Cover_Image();
 
