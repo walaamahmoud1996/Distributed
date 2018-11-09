@@ -144,17 +144,22 @@ Message Server::doOperation(Message requested){
 	// image x ("def.jpg", args[0], "amr");
 	// string res = x.viewImage(args[1]);
 	cout << "I'm doing opp:\n";
+
 	vector<string> aho = requested.getMessage();
 	for(int i =0; i < aho.size(); i++)
 		cout << aho[i] << endl;
+
 	cout << endl;
+	image toBeback(aho[0], aho[0], aho[1]);
+
 	vector<string> rep;
 	// rep.push_back(res);
 	// //Message y(0, Reply, "a7eh", 4, 0);
 
 
   //do operation logic
-  rep.push_back("h g g");
+  rep.push_back(aho[0]);
+	rep.push_back(toBeback.printImage());
 	Message Z(100, MessageType::Reply, rep, 10);
   Z.setPeerAddr(requested.getPeerAddr());   //to know who to send to;
 	return Z;

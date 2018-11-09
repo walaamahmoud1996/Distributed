@@ -2,6 +2,7 @@
 #define MESSAGE_H
 #include "stringMan.h"
 #include"UDPSocket.h"
+#include<fstream>
 #include <string>
 #include <cstring>
 #include<utility>
@@ -10,7 +11,7 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
-#define SIZE 22
+#define SIZE 8000
 using namespace std;
 
 enum MessageType {Reply,Request };

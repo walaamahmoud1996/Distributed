@@ -16,14 +16,17 @@ int main(){
 
 	//operation 1: view Image
 	vector<string> args;
-	args.push_back("hi.jpg");
+	args.push_back("indexZ.jpg");
 	args.push_back("ahmed");
 
 	Message y(1445, Request, args, 22);
 	//cout << y.getOperation() << endl;
 	Message printed = x.execute(y);
 	vector<string> aho = printed.getMessage();
-	for(int i =0; i < aho.size(); i++)
-		cout << aho[i]<<endl;
+
+	cout << aho[0]<<endl;
+	ofstream fout("output.jpg", ios::binary);
+	fout << aho[1];
+	fout.close();
 	return 0;
 }

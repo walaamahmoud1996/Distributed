@@ -14,16 +14,15 @@
 #include <stdio.h>
 #include <sys/wait.h>
 #include <stdlib.h>
-
 #include <string>
-
+#include "stringMan.h"
 
 using namespace std;
 
 
 class Image{
-private:
-  
+protected:
+
   void encode(string image_name,string text_name);
   void decode(string image_name);
   string convert_to_string(string image_name);
@@ -33,19 +32,19 @@ private:
   //string convert_to_text(string image_as_string);
   string actual_image;
   string cover_image;
+  string image_name;
 
 
 
 public:
-    Image(string image_name,string text_name);//owener side function
+    void setCoverImage(string);
+    string getCoverImage();
+    //Image(string image_name,string text_name);//owener side function
     //Image(string image_as_string);//directory side function
     //Image(string owener,string Image_id,string cover_as_string);//viewer side function
-    Image(string,string,int);
-    string Get_Actual_Image();
-    string Get_Cover_Image();
-
-
-
+    //Image(string,string,int);
+    //string Get_Actual_Image();
+    //string Get_Cover_Image();
 };
 
 #endif

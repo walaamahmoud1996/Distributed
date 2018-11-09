@@ -12,7 +12,7 @@
 #include<stdlib.h>
 #include<unistd.h>
 #include <arpa/inet.h>
-#define SIZE 22
+#define SIZE 8000
 using namespace	std;
 
 class UDPSocket

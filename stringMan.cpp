@@ -37,3 +37,11 @@ int UnShrinkInt(string tmp)
   return x;
 
 }
+
+
+bool existFile(string fileName)
+{
+  const char *name = fileName.c_str();
+  struct stat   buffer;
+  return (stat (name, &buffer) == 0);
+}

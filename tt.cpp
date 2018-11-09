@@ -2,6 +2,8 @@
 #include<vector>
 #include<iostream>
 #include<algorithm>
+#include<fstream>
+#include<map>
 using namespace std;
 
 
@@ -52,17 +54,37 @@ int main()
 // int x = 0b1;
 // cout << (x << 8) << endl;
 
-int cnt = 0;
-for(int i =0;i < 15; i++)
-{
-	cout << i << endl;
-	if(i == 5)
-	{
-		i = 4;
-		cnt++;
-	}
-	if(cnt == 3) break;
-}
+// int cnt = 0;
+// for(int i =0;i < 15; i++)
+// {
+// 	cout << i << endl;
+// 	if(i == 5)
+// 	{
+// 		i = 4;
+// 		cnt++;
+// 	}
+// 	if(cnt == 3) break;
+// }
+
+
+
+string x = "amr.xcvx";
+string y = "sadfa.adfasdfa";
+string z = y + " " + x.substr(0,x.find('.'))+".txt";
+cout << z<< endl;
+ofstream fout(z);
+map<string, int> Abs;
+Abs["a"] = 3;
+Abs["c"] = 12;
+
+for(auto it:Abs)
+	fout << it.first << " " << it.second << endl;
+
+
+
+
+fout.close();
+
 
 
   return 0;

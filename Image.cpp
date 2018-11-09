@@ -1,34 +1,5 @@
 #include "Image.h"
-//owener side function
-Image::Image(string image_name,string text_name){
 
-	encode(image_name,text_name);
-	actual_image = convert_to_string(image_name);
-
-}
-//viewer side constructor
-Image::Image(string image_name,string image_as_string,int decode_level){
-
-	if(decode_level == 0)
-	{convert_to_jpeg("cover"+image_name,image_as_string);
-	//convert_to_jpeg("cover.jpeg",cover_as_string);
-
-	decode("cover"+image_name);
-
-	}
-	else
-	{
-		
-		decode(image_name);
-
-	}
-
-}
-/*
-Image::Image(string image_as_string){
-	convert_to_jpeg(image_as_string);
-	
-}*/
 void Image::encode(string image_name,string text_name){
 
 	string line = "steghide embed -ef ";
@@ -40,7 +11,7 @@ void Image::encode(string image_name,string text_name){
 }
 
 void Image::decode(string image_name){
-	
+
 	string line = "steghide extract -sf ";
 	line+= image_name;
 	line+= " --passphrase 123";
@@ -73,10 +44,12 @@ void Image::convert_to_jpeg(string image_as_string){
 
 }
 
-
-string Image::Get_Actual_Image(){
-	return actual_image;
+void Image::setCoverImage(string _coverImage)
+{
+	cover_image = _coverImage;
 }
-string Image::Get_Cover_Image(){
+
+string Image::getCoverImage()
+{
 	return cover_image;
 }

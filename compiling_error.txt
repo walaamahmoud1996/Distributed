@@ -1,3 +1,8 @@
-/usr/bin/../lib/gcc/x86_64-linux-gnu/6.2.0/../../../x86_64-linux-gnu/crt1.o: In function `_start':
-(.text+0x20): undefined reference to `main'
+/tmp/testImage-f2ef2b.o: In function `main':
+/home/amrgouhar/Downloads/DisProj/Distributed/testImage.cpp:(.text+0x92): undefined reference to `masterImage::masterImage(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)'
+/home/amrgouhar/Downloads/DisProj/Distributed/testImage.cpp:(.text+0x11d): undefined reference to `Image::setCoverImage(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)'
+/home/amrgouhar/Downloads/DisProj/Distributed/testImage.cpp:(.text+0x184): undefined reference to `masterImage::setNumberOfViews(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, int)'
+/home/amrgouhar/Downloads/DisProj/Distributed/testImage.cpp:(.text+0x201): undefined reference to `masterImage::Get_Hidden_Image(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)'
+/home/amrgouhar/Downloads/DisProj/Distributed/testImage.cpp:(.text+0x30a): undefined reference to `masterImage::~masterImage()'
+/home/amrgouhar/Downloads/DisProj/Distributed/testImage.cpp:(.text+0x49d): undefined reference to `masterImage::~masterImage()'
 clang: error: linker command failed with exit code 1 (use -v to see invocation)
