@@ -2,22 +2,12 @@
 using namespace std;
 
 
-int Server::UnShrinkInt(string tmp)
-{
-  int x = 0;
-  for(int i =0; i < 4;i++)
-  {
-    int tmpx = tmp[i] &0xff;
-    x |= (tmpx<<(i*8));
-  }
-  return x;
 
-}
 
 int Server::getPacketNumber(string message, bool& end)
 {
 	int tmp = UnShrinkInt(message.substr(12,4));
-  end = (tmp >> 31);
+  end = (tmp >> 31) & 1;
   tmp &= 0x7fffffff;
 	return tmp;
 }
@@ -26,29 +16,34 @@ int Server::getPacketNumber(string message, bool& end)
 
 bool Server::matchPackets(string Packet1)
 {
+//  cout << "operation & MT: " << UnShrinkInt(Packet1.substr(4,4)) << endl;
 	int rpc_id1 = UnShrinkInt(Packet1.substr(0,4));
+	//cout << "rpc: " << rpc_id1 << endl;
 	string hostname;
 	int port;
-	udpServerSocket.getPeerAddr(hostname, port);
+	struct sockaddr_in targetAddr = udpServerSocket.getPeerAddr(hostname, port);
 	pair<pair<string, int>, int> Index = make_pair(make_pair(hostname,port),rpc_id1);		// you can't use sockaddr_in because it doesn't have a less than operator defined so no map; instead use port and hostname to build a unique map of pair<pair<int,int>, int>, vector<string>
 	bool lastPacketFlag = false;
 	vector<string >tmp;
 //	Log[ make_pair(Addr,rpc_id1)] = tmp;
 	if(Log.count(Index))
 	{
-		string tmp = Log[Index][Log[Index].end()-Log[Index].begin() + 1];
+		string tmp = Log[Index][Log[Index].size() - 1];
 		int lastPacket = getPacketNumber(tmp, lastPacketFlag);
 		int packet = getPacketNumber(Packet1, lastPacketFlag);
+    // cout << "current Packet: " << packet <<endl;
+    // cout << "Is it the last? " << lastPacketFlag << endl;
 		if( (lastPacket+1)!= packet)
 		{
 			vector<string> tmp;
 			tmp.push_back(to_string(lastPacket+1));
 			Message Packet1440(1440,MessageType::Reply,tmp,rpc_id1);
 			tmp = Packet1440.marshal();
-			char* buffer = strcpy((char*)malloc(tmp[0].length()+1),tmp[0].c_str());
+			char* buffer = copyStr(tmp[0]);//= strcpy((char*)malloc(tmp[0].length()+1),tmp[0].c_str());
 			//DPSocket::writeToSocket (char * buffer, int maxBytes ){
-			udpServerSocket.setPeerAddr(hostname,port);
-			udpServerSocket.writeToSocket(buffer, SIZE);
+			//udpServerSocket.setPeerAddr(hostname,port);
+      int toSend = tmp[0].size();
+			udpServerSocket.writeToSocket(buffer, toSend);
 			return false;
 		}
 		else
@@ -60,20 +55,25 @@ bool Server::matchPackets(string Packet1)
 	else
 	{
 		int packet = getPacketNumber(Packet1, lastPacketFlag);
+    // cout << "current Packet: " << packet <<endl;
+    // cout << "Is it the last? " << lastPacketFlag << endl;
 		if(packet)
 		{
 			vector<string> tmp;
 			tmp.push_back(to_string(0));
 			Message Packet1440(1440,MessageType::Reply,tmp,rpc_id1);
 			tmp = Packet1440.marshal();
-			char* buffer = strcpy((char*)malloc(tmp[0].length()+1),tmp[0].c_str());
-			udpServerSocket.setPeerAddr(hostname,port);
-			udpServerSocket.writeToSocket(buffer, SIZE);
+      char* buffer = copyStr(tmp[0]);//= strcpy((char*)malloc(tmp[0].length()+1),tmp[0].c_str());
+
+		//	udpServerSocket.setPeerAddr(hostname,port);
+      int toSend = tmp[0].size();
+			udpServerSocket.writeToSocket(buffer, toSend);
 			return false;
 		}
 		else
 		{
 			Log[Index].push_back(Packet1);
+			targetLog[Index] = (targetAddr);
 			return !lastPacketFlag;
 		}
 	}
@@ -84,24 +84,43 @@ Message Server::getRequest(){
 	string marshalled_base64;
 	int maxBytes = SIZE; //to be changed
 
-	while(udpServerSocket.readSocketWithBlock(marshalled_base64,maxBytes)>=0){
-		cout << marshalled_base64 << endl;
-		//tb2a e3ml thread hna for recieving packets from different resources;
+	while(udpServerSocket.readSocketWithBlock(marshalled_base64,maxBytes)==0){
+		// cout << "Recieved this: " <<  marshalled_base64 << endl;
+    // cout << "Of Size: " << marshalled_base64.size() << endl;
+    // cout << "operation: " << (UnShrinkInt(marshalled_base64.substr(4,4))&0x7fffffff) << endl;
+		// //tb2a e3ml thread hna for recieving packets from different resources;
 
 
 		if (matchPackets(marshalled_base64))
 		{
+      cout << "I'm forming a message\n";
 			int rpc_id1 = UnShrinkInt(marshalled_base64.substr(0,4));
 			string hostname;
 			int port;
 			udpServerSocket.getPeerAddr(hostname, port);
 			pair<pair<string, int>, int> Index = make_pair(make_pair(hostname,port),rpc_id1);		// you can't use sockaddr_in because it doesn't have a less than operator defined so no map; instead use port and hostname to build a unique map of pair<pair<int,int>, int>, vector<string>
-			Message request_msg(Log[Index]);
-			request_msg.setPeerData(make_pair(hostname,port));
+
+      vector<string> PhantomMessage;
+      PhantomMessage.push_back("g");
+      Message Packet1440P(1440,MessageType::Reply,PhantomMessage,rpc_id1);
+      Packet1440P.setArgNum(0);
+      PhantomMessage = Packet1440P.marshal();
+      // cout << "phantom size: "<<PhantomMessage[0].size() << endl;
+      //char* buffer = strcpy((char*)malloc(PhantomMessage[0].length()+1),PhantomMessage[0].c_str());
+      char* buffer = copyStr(PhantomMessage[0]);//= strcpy((char*)malloc(tmp[0].length()+1),tmp[0].c_str());
+
+      //udpServerSocket.setPeerAddr(hostname,port);
+
+      int toSend = PhantomMessage[0].size();
+      udpServerSocket.writeToSocket(buffer, toSend);
+
+      Message request_msg(Log[Index]);
+			//request_msg.setPeerData(make_pair(hostname,port));
+			request_msg.setPeerAddr(targetLog[Index]);
 			Log.erase(Index);
+			targetLog.erase(Index);
 			if(request_msg.getMessageType() == MessageType::Request)
 			{
-
 				cout<<"SERVER RECIEVED A REQUEST";
 				return request_msg;	//tb2a eft7 thread hna
 			}
@@ -124,15 +143,20 @@ Message Server::doOperation(Message requested){
 	// printf("is it assignment problem?");
 	// image x ("def.jpg", args[0], "amr");
 	// string res = x.viewImage(args[1]);
+	cout << "I'm doing opp:\n";
+	vector<string> aho = requested.getMessage();
+	for(int i =0; i < aho.size(); i++)
+		cout << aho[i] << endl;
+	cout << endl;
 	vector<string> rep;
 	// rep.push_back(res);
 	// //Message y(0, Reply, "a7eh", 4, 0);
 
 
   //do operation logic
-
-	Message Z(0, MessageType::Reply, rep, 0);
-  Z.setPeerData(requested.getPeerData());   //to know who to send to;
+  rep.push_back("h g g");
+	Message Z(100, MessageType::Reply, rep, 10);
+  Z.setPeerAddr(requested.getPeerAddr());   //to know who to send to;
 	return Z;
 }
 
@@ -140,18 +164,21 @@ void Server::sendReply (Message  _message){
 
 		int maxBytes = _message.getMessageSize();
 		vector<string> str = (_message.marshal());
-
+    // cout << "To be sent: " << str[0].size() << endl;
     string rMessage;
 		for(int i =0; i < str.size(); i++)
 		{
-			char* buffer = strcpy((char*)malloc(str[i].length()+1),str[i].c_str());
+			//char* buffer = strcpy((char*)malloc(str[i].length()+1),str[i].c_str());
+      char* buffer = copyStr(str[i]);//= strcpy((char*)malloc(tmp[0].length()+1),tmp[0].c_str());
 
-      pair<string, int> tmpAddr = _message.getPeerData();
-      udpServerSocket.setPeerAddr(tmpAddr.first, tmpAddr.second);
+      //pair<string, int> tmpAddr = _message.getPeerData();
+      udpServerSocket.setPeerAddr(_message.getPeerAddr());
+      maxBytes = str[i].size();
 
+      udpServerSocket.writeToSocket(buffer,maxBytes);
 			if(i != str.size()-1)
 			{
-				if(udpServerSocket.writeToSocketAndWait(buffer,maxBytes, 0, 3, rMessage) == 0)	//something is recieved;
+				if(udpServerSocket.readFromSocketWithTimeout(rMessage,maxBytes, 0, 3) == 0)	//something is recieved;
 				{
 					vector<string> tmp;
 					tmp.push_back(rMessage);
@@ -163,8 +190,9 @@ void Server::sendReply (Message  _message){
 					}
 				}
 			}
-			else if(udpServerSocket.writeToSocketAndWait(buffer,maxBytes, 3 ,0, rMessage) == 0)	//something is recieved;
+			else if(udpServerSocket.readFromSocketWithTimeout(rMessage,maxBytes, 3, 0) == 0)	//something is recieved;
 			{
+        cout << "Waiting for the confirmation message\n";
 				vector<string> tmp;
 				tmp.push_back(rMessage);
 				Message X(tmp);
@@ -176,6 +204,7 @@ void Server::sendReply (Message  _message){
 						i = stoi(tmp1[0]) - 1;
 					}
 				}
+        // cout << "X.operation: " << X.getOperation() <<endl;
 			}
 			else{
 				i = -1;

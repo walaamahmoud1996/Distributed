@@ -11,6 +11,7 @@ int main(){
 	string str = "127.0.0.1";
 	char* ip =strcpy((char*)malloc(str.length()+1),str.c_str());
 	Server x(ip, 1234);
+ while(1)
 	x.serveRequest();
 
 

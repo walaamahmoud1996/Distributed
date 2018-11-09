@@ -19,9 +19,11 @@ int main(){
 	args.push_back("hi.jpg");
 	args.push_back("ahmed");
 
-	Message y(1, Request, args, 0);
-
-	x.execute(y);
-
+	Message y(1445, Request, args, 22);
+	//cout << y.getOperation() << endl;
+	Message printed = x.execute(y);
+	vector<string> aho = printed.getMessage();
+	for(int i =0; i < aho.size(); i++)
+		cout << aho[i]<<endl;
 	return 0;
 }

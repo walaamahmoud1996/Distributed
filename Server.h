@@ -15,6 +15,7 @@ class Server
 private:
 
 	map<pair<pair<string, int>, int>, vector<string>> Log;
+	map<pair<pair<string, int>, int>, struct sockaddr_in> targetLog;
 	int reqID;
 	map<int,pair<string, int>> reqHist;
 	UDPServerSocket udpServerSocket;
@@ -25,7 +26,6 @@ private:
 
 
 
-	int UnShrinkInt(string tmp);
 
 	int getPacketNumber(string message, bool& end);
 

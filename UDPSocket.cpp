@@ -71,12 +71,13 @@ int UDPSocket::writeToSocket (char * buffer, int maxBytes ){
 
 	//makeDestSA(&peerAddr,this->peerAddress,this->peerPort);
 
-  cout << "hb3t 5alas a5er kalam\n";
-	if((bytesnum = sendto(this->sock,buffer,strlen(buffer),0,(struct sockaddr *)&peerAddr,sizeof(struct sockaddr_in)))<0)
+  //cout << "hb3t 5alas a5er kalam\n";
+	if((bytesnum = sendto(this->sock,buffer,/*strlen(buffer)*/maxBytes,0,(struct sockaddr *)&peerAddr,sizeof(struct sockaddr_in)))<0)
 		{
 			perror("ERROR : CANNOT SEND A REPLY TO CLIENT");
 		}
-
+    //cout << "sent bytes: " << maxBytes << endl;
+    //cout << bytesnum << endl;
 	return bytesnum;
 }
 
@@ -90,11 +91,19 @@ int UDPSocket::writeToSocketAndWait (char * buffer, int maxBytes,int Sec,int mic
   //cout << buffer <<endl;
   //cout << strlen(buffer) <<endl;
 
-	if((bytesnum = sendto(this->sock,buffer,strlen(buffer),0,(struct sockaddr *)&peerAddr,sizeof(struct sockaddr_in)))<0)
+  // int x = 0;
+  // for(int i =12; i < 16;i++)
+  // {
+  //   int tmpx = buffer[i] & 0xff;
+  //   x |= (tmpx<<(i*8));
+  // }
+  // cout << "Packet ID socket: " << (x &0x7fffffff) << endl;
+  // cout << "is this the last? " << ((buffer[15] >>7) &1) << endl;
+	if((bytesnum = sendto(this->sock,buffer,/*strlen(buffer)*/ maxBytes,0,(struct sockaddr *)&peerAddr,sizeof(struct sockaddr_in)))<0)
 		{
 			perror("ERROR : CANNOT SEND A REPLY TO CLIENT");
 		}
-    cout << buffer <<endl;
+    //cout << buffer <<endl;
 
 	//return bytesnum;
   if(Sec || microSec)
@@ -134,27 +143,36 @@ int UDPSocket::readFromSocketWithTimeout (string& buffer, int maxBytes, int time
 		}
 	else
   {
-    buffer = message1;
-    cout << buffer << endl;
+    for(int i =0;i<SIZE;i++)
+      buffer.push_back(message1[i]);
+//    buffer = message1;
+    //cout << buffer << endl;
 		return bytesnum;
   }
 }
 
 
-void UDPSocket::getPeerAddr(string& hostname, int&port)
+struct sockaddr_in UDPSocket::getPeerAddr(string& hostname, int&port)
 {
 
   char str[INET_ADDRSTRLEN];
   inet_ntop(AF_INET, &(peerAddr.sin_addr), str, INET_ADDRSTRLEN);
-  hostname = str;
+  for(int i =0; i < INET_ADDRSTRLEN;i++)
+    hostname[i] = str[i];
   port = peerAddr.sin_port;
+  return peerAddr;
 }
+
 void UDPSocket::setPeerAddr(string hostname, int port)
 {
   char* tmp = strcpy((char*)malloc(hostname.length()+1),hostname.c_str());
   makeDestSA(&peerAddr, tmp,  port);
 }
 
+void UDPSocket::setPeerAddr(struct sockaddr_in _peerAddr)
+{
+  peerAddr = _peerAddr;
+}
 int UDPSocket::readSocketWithBlock (string& buffer, int maxBytes ){
 	int bytesnum;
 
@@ -164,8 +182,7 @@ int UDPSocket::readSocketWithBlock (string& buffer, int maxBytes ){
   char message1[SIZE];
   memset(message1,0 ,sizeof(message1));
 	if((bytesnum=recvfrom(sock,message1,SIZE,0,(struct sockaddr *)&peerAddr,&aLenght)<0)){
-    printf("you don't listen\n");
-		perror("ERROR :SERVER CANNOT RECIEVE");
+    perror("ERROR :SERVER CANNOT RECIEVE");
     return bytesnum;
 	}
 	else if(bytesnum>maxBytes)
@@ -175,11 +192,21 @@ int UDPSocket::readSocketWithBlock (string& buffer, int maxBytes ){
 		}
 	else
   {
+//    cout << "make sure: " << ((message1[15] >> 7)&1) << endl;
+
+    buffer = "";
     for(int i =0; i< SIZE; i++)
-      cout << message1[i];
-    buffer = message1;
-    cout << buffer <<endl;
-    cout << bytesnum << endl;
+      buffer.push_back(message1[i]);
+
+      // cout << "packet SocketID: " << (UnShrinkInt(buffer.substr(12,4)) & 0x7fffffff) << endl;
+      // cout << "is it the end?" << (( UnShrinkInt(buffer.substr(12,4)) >>31)&1) << endl;
+      // cout << "make sure: " << ((message1[15] >> 7)&1) << endl;
+      // cout << "for rpcID: " << (UnShrinkInt(buffer.substr(0,4))) << endl;
+
+    //cout << "Recived at socket level: " << buffer <<endl;
+    //cout << "Size of at socket level: " << buffer.size() << endl;
+    // cout << bytesnum << endl;
+
 		return bytesnum;
   }
 }

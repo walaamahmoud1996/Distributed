@@ -18,87 +18,91 @@ Message::Message(int p_operation,MessageType type, vector<string> p_message, int
 Message::Message(vector<string> serialized){
 	arg_num = -1;		//if arg_num = -1; then this is a phantom message;
 	message_size = 0;
-	MessageType message_type;
 	operation = -1;
 	rpc_id = -1;
 	string messageSent = "";
+	int nowSize;
 	for(int i = 0; i < serialized.size();i++)
 	{
+		//  cout <<"to be unmarshalled: " <<serialized[i] << endl;
 		int tmpx;
 		tmpx = UnShrinkInt(serialized[i].substr(0,4));
 		if(i== 0)
 			rpc_id = tmpx;
 		else if(rpc_id != tmpx)
 		{
+			cout << "rpc_id not matching\n";
 			arg_num = -1;
 			break;
 		}
 
 		tmpx = UnShrinkInt(serialized[i].substr(4,4));
-		if(i ==0)
+		if(i == 0)
 			{
 				operation = tmpx & 0x7fffffff;
-				message_type = MessageType(tmpx >> 31);
+				// cout << "operation: " << operation << endl;
+				message_type = MessageType((tmpx >> 31) & 1);
+				// cout << "message_type: " << message_type << endl;
+
 			}
-		else if((operation != (tmpx & 0x7fffffff))||(message_type != MessageType(tmpx >> 31)))
+		else if((operation != (tmpx & 0x7fffffff))||(message_type != MessageType((tmpx >> 31)&1)))
 		{
+			cout << "op and mt are not matching\n";
 			arg_num = -1;
 			break;
 		}
 		tmpx = UnShrinkInt(serialized[i].substr(8,4));
 		if(i == 0)
 		{
+			nowSize =(tmpx &0x00ffffff);
 			message_size += (tmpx &0x00ffffff);
 			arg_num = (tmpx >> 24) &0xff;
 		}
 		else if(arg_num != ((tmpx >> 24) &0xff))
 		{
+			cout << "num arg not matching\n";
 			arg_num = -1;
 			break;
 		}
-		messageSent += serialized[i].substr(12,SIZE-16);
+		else
+		{
+			nowSize =(tmpx &0x00ffffff);
+			message_size += (tmpx &0x00ffffff);
+		}
+		 //cout << "NowSize: " << nowSize << endl;
+		messageSent += serialized[i].substr(16,nowSize);
 
 
 	}
 
+		//  cout << "operationID: " << operation << endl;
+		//  cout << "Message Size: " <<  message_size << endl;
+		//  cout << "RpcID: " <<  rpc_id << endl;
+		//  cout << "argNum: " << arg_num << endl;
+		//  cout << "Message Type: " << message_type << endl;
+		//  cout << "messageSent: " << messageSent << endl;
+		// //cout << "ar"
 		int To = 0;
+
+		//cout << "messageSent.size: " << messageSent.size() << endl;
 		for(int i =0; i < arg_num-1; i++)
 		{
 			size_t found = messageSent.find(' ');
 			string t = messageSent.substr(To,found);
-
+			//cout << messageSent.substr(To,found) << endl;
 			To += (found+1);
+			//cout << "arg[" << i << "]: " << t << endl;
 			message.push_back(t);
 		}
-		string t = messageSent.substr(To,messageSent.size());
+		//cout << "I'm standing here: " << To << endl;
+		//cout << "messageSent.size: " << messageSent.size() << endl;
+		string t = messageSent.substr(To);
+
+		//cout << "arg[" << arg_num-1 << "]: " << t << endl;
 		message.push_back(t);
 }
 
 
-string Message::ShrinkInt(int x)
-{
-	string returned = "";
-	for(int i =0; i < 4; i++)
-	{
-		char z = x & 0xff;
-    cout << z<< endl;
-		returned.push_back(z);
-		x = x>>8;
-	}
-	return returned;
-}
-
-int Message::UnShrinkInt(string tmp)
-{
-  int x = 0;
-  for(int i =0; i < 4;i++)
-  {
-    int tmpx = tmp[i] &0xff;
-    x |= (tmpx<<(i*8));
-  }
-  return x;
-
-}
 
 vector <string> Message::marshal (){
 	string messageSent = "";
@@ -122,20 +126,27 @@ vector <string> Message::marshal (){
 
 		operation &= 0x7fffffff;
 		tmp+= ShrinkInt((int(message_type)<<31) | operation);
-
+		//cout << operation << " : " <<(UnShrinkInt(tmp.substr(4,4))&0x7fffffff) << " : " << ((UnShrinkInt(tmp.substr(4,4)) >> 31) & 1) << endl;
 		if(i!=end-1)
 			tmp+= ShrinkInt( (arg_num<<24) | SIZE-16);		//remove this in the near future
 		else
-			tmp+= ShrinkInt((arg_num<<24) | message_size%(SIZE-16));
+			tmp+= ShrinkInt((arg_num<<24) | message_size- ((SIZE-16)*serialized.size()));
 
 
 		tmp += ShrinkInt(((i!=(end-1))<<31)|(i&0x7fffffff));
-
+		// cout << "packet is: " << (UnShrinkInt(tmp.substr(12,4)) & 0x7fffffff) << endl;
+		// cout << "is it the end?" << (( UnShrinkInt(tmp.substr(12,4)) >>31)&1) << endl;
 
 		tmp += messageSent.substr(i*(SIZE-16),SIZE-16);
 
 		serialized.push_back(tmp);
 	}
+	// cout << "operationID: " << operation << endl;
+	// cout << "Message Size: " <<  message_size << endl;
+	// cout << "RpcID: " <<  rpc_id << endl;
+	// cout << "argNum: " << arg_num << endl;
+	// cout << "Message Type: " << message_type << endl;
+
 	return serialized;
 }
 
@@ -170,6 +181,10 @@ void Message::setOperation (int _operation){
 
 	this->operation = _operation;
 }
+void Message::setArgNum (int _arg_num)
+{
+	arg_num = _arg_num;
+}
 void Message::setMessage (vector<string> message, size_t message_size){
 
 	this->message = message;
@@ -190,5 +205,12 @@ void Message::setPeerData(pair<string, int> _peerData)
 {
 	peerData = _peerData;
 }
-
+void Message::setPeerAddr(struct sockaddr_in _peerAddr)
+{
+	XpeerAddr = _peerAddr;
+}
+struct sockaddr_in Message::getPeerAddr()
+{
+	return XpeerAddr;
+}
 Message::~Message(){}

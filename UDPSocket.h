@@ -1,6 +1,6 @@
 #ifndef UDPSOCKET_H
 #define UDPSOCKET_H
-
+#include"stringMan.h"
 #include<string>
 #include<cstring>
 #include <iostream>
@@ -12,13 +12,12 @@
 #include<stdlib.h>
 #include<unistd.h>
 #include <arpa/inet.h>
-
-#define SIZE 8000
+#define SIZE 22
 using namespace	std;
 
 class UDPSocket
 {
-private:
+protected:
 	int sock;
 	struct sockaddr_in myAddr,peerAddr;
 	//sockaddr_in peerAddr;
@@ -44,9 +43,9 @@ public:
 	UDPSocket ();
 	// void setFilterAddress (char * _filterAddress);
 	// char * getFilterAddress ();
-	void getPeerAddr(string& hostname, int& port);
-	void setPeerAddr(string hostname, int port);
-
+	struct sockaddr_in getPeerAddr(string& hostname, int& port);
+	void setPeerAddr(struct sockaddr_in);
+	void setPeerAddr(string, int);
 	bool initializeServer (char * _myAddr, int _myPort);
 	bool initializeClient (char * _peerAddr, int _peerPort);
 	int writeToSocket (char * buffer, int maxBytes );//for a reply a server side function

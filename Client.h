@@ -42,7 +42,6 @@ private:
 		arquments
 
 	*/
-	int UnShrinkInt(string tmp);
 
 	int getPacketNumber(string message, bool& end);
 
