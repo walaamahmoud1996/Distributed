@@ -3,6 +3,7 @@
 #include <string>
 #include<iostream>
 #include <cstdio>
+#include"stdio.h"
 #include <cstring>
 #include <thread>
 #include <map>

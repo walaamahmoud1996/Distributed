@@ -24,20 +24,14 @@ map<string, int> masterImage::readDataToMap(string fileName)
 	map<string,int> extracted;
 	while(!fin.eof())
 	{
-		cout << "reading\n";
 		string tmp1;
 		int tmp2;
 		fin >> tmp1 >> tmp2;
 		extracted[tmp1] = tmp2;
 	}
-	cout <<"read!\n";
+	fin.close();
 	return extracted;
 }
-/*
-Image::Image(string image_as_string){
-	convert_to_jpeg(image_as_string);
-
-}*/
 
 pair<string,string> masterImage::Get_Hidden_Image(string user_name){
 
@@ -54,7 +48,8 @@ pair<string,string> masterImage::Get_Hidden_Image(string user_name){
 	encode(cover_image,image_name);
 	actual_image = convert_to_string(cover_image);
 
-	return make_pair((owner + " " + image_name),actual_image);
+	remove(text_name.c_str());
+	return make_pair((owner + "!" + image_name),actual_image);
 }
 
 

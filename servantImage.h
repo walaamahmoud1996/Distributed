@@ -15,8 +15,8 @@ private:
 
 
 public:
-    servantImage(string, string, string);
-    void unHideImage();       //to be changed when we know the requirement for the QT;
+    servantImage(string, string,string,string);
+    bool unHideImage();       //to be changed when we know the requirement for the QT;
     int getNumberOfViews();
     void setNumberOfViews(int views);
 

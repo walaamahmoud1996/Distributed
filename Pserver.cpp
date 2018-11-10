@@ -88,7 +88,7 @@ void DServer::Ping(Message ping_request){
 
 
 }
-vector<string> DServer::Take_user_recources(Message take_recource_request){
+vector<string> PServer::Take_user_recources(Message take_recource_request){
 	vector<string> take_recource_reply;
 	vector<string> owner_name_image;//request parameters
 	owner_name_image= take_recource_request.getMessage();

@@ -30,7 +30,6 @@ private:
 public:
 	//DServer();
 	PServer(char * _listen_hostname, int _listen_port, vector<string> owned);
-	void serveRequest();
 	~PServer();
 };
 #endif
